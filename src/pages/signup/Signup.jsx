@@ -38,7 +38,6 @@ export default function Signup() {
                         value={email}
                         onChange={handleForm}
                         disabled={disabled}
-                        required
                     />
                     <input
                         placeholder="password"
@@ -47,7 +46,6 @@ export default function Signup() {
                         value={password}
                         onChange={handleForm}
                         disabled={disabled}
-                        required
                     />
                     <input
                         placeholder="username"
@@ -56,7 +54,6 @@ export default function Signup() {
                         value={username}
                         onChange={handleForm}
                         disabled={disabled}
-                        required
                     />
                     <input
                         placeholder="picture url"
@@ -65,7 +62,6 @@ export default function Signup() {
                         value={picture_url}
                         onChange={handleForm}
                         disabled={disabled}
-                        required
                     />
                     <button type="submit" disabled={disabled}>Sign Up</button>
                     <Link to={"/"}>Switch back to log in</Link>
