@@ -67,7 +67,7 @@ export default function Signup() {
                         disabled={disabled}
                         required
                     />
-                    <button type="submit">Sign Up</button>
+                    <button type="submit" disabled={disabled}>Sign Up</button>
                     <Link to={"/"}>Switch back to log in</Link>
 
                 </SignUpForm>
