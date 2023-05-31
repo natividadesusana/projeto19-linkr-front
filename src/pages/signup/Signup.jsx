@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import HomeScreen from "../../constants/HomeScreen";
+import HomeScreen from "../../components/HomeScreen";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import COLORS from "../../constants/Colors";
+import FONTS from "../../constants/Fonts";
 
 export default function Signup() {
 
@@ -18,11 +20,11 @@ export default function Signup() {
 
     const createRegister = (e) => {
         e.preventDefault();
-        setDisabled(true);
         axios
             .post(`${process.env.REACT_APP_BASE_URL}/sign-up`, form)
             .then(() => navigate("/"))
             .catch((err) => alert(err.response.data))
+            .finally(() => setDisabled(false))
     }
 
     return (
@@ -33,7 +35,7 @@ export default function Signup() {
 
                     <input
                         placeholder="email"
-                        type="email"
+                        type="e-mail"
                         name="email"
                         value={email}
                         onChange={handleForm}
@@ -63,7 +65,7 @@ export default function Signup() {
                         onChange={handleForm}
                         disabled={disabled}
                     />
-                    <button type="submit" disabled={disabled}>Sign Up</button>
+                    <button type="submit" disabled={disabled} onClick={() => setDisabled(true)}>Sign Up</button>
                     <Link to={"/"}>Switch back to log in</Link>
 
                 </SignUpForm>
@@ -78,15 +80,17 @@ const Main = styled.div`
     display: flex;
 `
 const SignupContainer = styled.div`
-    background-color: #2d3133;
+    background-color: ${COLORS.PRIMARY};
     width: 30%;  
     height: 100vh;
+    
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     right: 0;
     top: 0;
+
     ${mediaQuery} {
         height: calc(100vh - 185px);
         width: 100%;
@@ -99,35 +103,36 @@ const SignUpForm = styled.form`
     flex-direction: column;
     align-items: center;
     gap: 15px;
+
     input {
         width: 395px;
         height: 40px;
         border-radius: 6px;
         border: 1px solid #fff;
         background-color: #fff;
-        font-family: 'Lato';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 25px;
-        line-height: 50px;
-        color: #000;
+        font-family: ${FONTS.PRIMARY};
+        
         padding: 17px;
         ${mediaQuery} {
             width: 84%;
         }
 
         ::placeholder {
-            font-family: 'Oswald', sans-serif;
+            font-family: ${FONTS.SECONDARY}, sans-serif;
             font-style: normal;
             font-weight: 700;
             font-size: 27px;
             line-height: normal;
-            color: #9F9F9F;
+            color: ${COLORS.SECONDARY};
         }
 
         &:focus {
             border-color: #1877F2;
             outline: none;
+        }
+
+        &:disabled{
+            opacity: .6;
         }
     }
     button {
@@ -135,20 +140,19 @@ const SignUpForm = styled.form`
         height: 70px;
         border-radius: 6px;
         border: 1px solid #1877F2;
-        background-color: #1877F2;
-        font-family: 'Oswald';
-        font-style: normal;
+        
+        background-color: ${COLORS.TERCIARY};
+        font-family: ${FONTS.SECONDARY};
         font-weight: 700;
         font-size: 27px;
-        line-height: 40px;
         cursor: pointer;
-        color: #FFFFFF;
+        color: ${COLORS.QUATERNARY};
         ${mediaQuery} {
             width: 91%;
         }
     }
     a {
-        font-family: 'Lato';
+        font-family: ${FONTS.PRIMARY};
         font-style: normal;
         font-weight: 400;
         font-size: 20px;
@@ -156,7 +160,8 @@ const SignUpForm = styled.form`
 
         text-decoration-line: underline;
 
-        color: #FFFFFF;
+        color: ${COLORS.QUATERNARY};
+        
         ${mediaQuery} {
             margin-top: 25px;
         }
