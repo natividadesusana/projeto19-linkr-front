@@ -7,7 +7,7 @@ const Routes = () => {
     return useRoutes([
         {path: "/", element: <Signin/>},
         {path: "/cadastro", element: <Signup/>},
-        {path: "/home", element: <Home/>},
+        {path: "/timeline", element: <Home/>},
     ])
 }
 export default Routes

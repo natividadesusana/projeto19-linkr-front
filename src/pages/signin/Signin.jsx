@@ -23,7 +23,7 @@ export default function Signin() {
         setDisabled(true)
         axios
             .post(`${process.env.REACT_APP_BASE_URL}/sign-in`, form)
-            .then((res) => { navigate("/home"); console.log(res) })
+            .then((res) => { navigate("/timeline"); console.log(res) })
             .catch((err) => alert(err.response.data))
             .finally(() => {setLoading(false); setDisabled(false)})
     }
