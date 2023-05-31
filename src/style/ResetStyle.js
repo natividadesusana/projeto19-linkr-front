@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import COLORS from "../constants/Colors"
 
 const ResetStyle = createGlobalStyle`
     html, body, div, span, applet, object, iframe,
@@ -28,6 +29,7 @@ const ResetStyle = createGlobalStyle`
 	}
 	body {
 		line-height: 1;
+		background-color: ${COLORS.BACKGROUND};
 	}
 	ol, ul {
 		list-style: none;

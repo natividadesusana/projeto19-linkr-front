@@ -9,7 +9,7 @@ const Routes = () => {
         {path: "/", element: <App/>},
         {path: "/login", element: <Signin/>},
         {path: "/cadastro", element: <Signup/>},
-        {path: "/home", element: <Home/>},
+        {path: "/timeline", element: <Home/>},
     ])
 }
 export default Routes
