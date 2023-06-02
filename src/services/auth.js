@@ -1,7 +1,7 @@
-import { useContext } from 'react'
-import axios from 'axios'
-import AuthContext from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import axios from "axios";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 export function useLogin() {
   const { setUserName, setToken } = useContext(AuthContext)
