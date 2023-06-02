@@ -38,4 +38,3 @@ export function useLogout() {
       .catch(err => alert(err.response.data))
   }
 }
-
