@@ -5,5 +5,4 @@ const COLORS = {
     LOADING: '#9C9C9C',
     BACKGROUND: '#333333'
 }
-
 export default COLORS
