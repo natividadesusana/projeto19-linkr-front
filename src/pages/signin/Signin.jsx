@@ -6,6 +6,7 @@ import FONTS from "../../constants/Fonts";
 import axios from "axios";
 import { MoonLoader } from "react-spinners";
 import HomeScreen from "../../components/HomeScreen";
+import { useLogin } from '../../services/auth'
 
 export default function Signin() {
     const [form, setForm] = useState({ email: "", password: "" });
@@ -59,7 +60,6 @@ export default function Signin() {
             </SignupContainer>
         </Main>
     )
-}
 const mediaQuery = "@media (max-width: 768px)";
 
 const Main = styled.div`
@@ -158,4 +158,8 @@ const SignUpForm = styled.form`
         width: 100%;
         padding: 10px;
     }
+  width: 1000px;
+  margin: auto;
 `
+
+
