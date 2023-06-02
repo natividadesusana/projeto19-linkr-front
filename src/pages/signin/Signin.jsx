@@ -6,67 +6,67 @@ import FONTS from "../../constants/Fonts";
 import axios from "axios";
 import { MoonLoader } from "react-spinners";
 import HomeScreen from "../../components/HomeScreen";
-import { useLogin } from '../../services/auth'
 
 export default function Signin() {
-    const [form, setForm] = useState({ email: "", password: "" });
-    const [disabled, setDisabled] = useState(false);
-    const [loading, setLoading] = useState(false)
-    const { email, password } = form;
-    const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [disabled, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const { email, password } = form;
+  const navigate = useNavigate();
 
-    const handleForm = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    }
+  const handleForm = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
 
-    const signIn = (e) => {
-        e.preventDefault();
-        setDisabled(true)
-        axios
-            .post(`${process.env.REACT_APP_BASE_URL}/sign-in`, form)
-            .then((res) => { navigate("/timeline"); console.log(res) })
-            .catch((err) => alert(err.response.data))
-            .finally(() => {setLoading(false); setDisabled(false)})
-    }
+  const signIn = (e) => {
+    e.preventDefault();
+    setDisabled(true)
+    axios
+      .post(`${process.env.REACT_APP_BASE_URL}/sign-in`, form)
+      .then((res) => { navigate("/timeline"); console.log(res) })
+      .catch((err) => alert(err.response.data))
+      .finally(() => { setLoading(false); setDisabled(false) })
+  }
 
-    return (
-        <Main>
-            <HomeScreen />
-            <SignupContainer>
-                <SignUpForm onSubmit={signIn}>
+  return (
+    <Main>
+      <HomeScreen />
+      <SignupContainer>
+        <SignUpForm onSubmit={signIn}>
 
-                    <input
-                        placeholder="e-mail"
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={handleForm}
-                        disabled={disabled}
-                    />
-                    <input
-                        placeholder="password"
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={handleForm}
-                        disabled={disabled}
-                    />
-                    <button type="submit" disabled={disabled} onClick={() => setLoading(true)}>Log In</button>
-                    <Link to={"/cadastro"}>
-                        {loading ? <MoonLoader /> : "First time? Create an account!"}
-                    </Link>
+          <input
+            placeholder="e-mail"
+            type="email"
+            name="email"
+            value={email}
+            onChange={handleForm}
+            disabled={disabled}
+          />
+          <input
+            placeholder="password"
+            type="password"
+            name="password"
+            value={password}
+            onChange={handleForm}
+            disabled={disabled}
+          />
+          <button type="submit" disabled={disabled} onClick={() => setLoading(true)}>Log In</button>
+          <Link to={"/cadastro"}>
+            {loading ? <MoonLoader /> : "First time? Create an account!"}
+          </Link>
 
-                </SignUpForm>
-            </SignupContainer>
-        </Main>
-    )
-const mediaQuery = "@media (max-width: 768px)";
+        </SignUpForm>
+      </SignupContainer>
+    </Main>
+  )
+}
+  const mediaQuery = "@media (max-width: 768px)";
 
-const Main = styled.div`
+  const Main = styled.div`
     display: flex;
 `
-const SignupContainer = styled.div`
-    background-color: ${COLORS.PRIMARY};
+  const SignupContainer = styled.div`
+    background-color: ${COLORS.BACKGROUND};
     width: 30%;  
     height: 100vh;
 
@@ -84,7 +84,7 @@ const SignupContainer = styled.div`
     }
 `;
 
-const SignUpForm = styled.form`
+  const SignUpForm = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -111,7 +111,7 @@ const SignUpForm = styled.form`
             font-weight: 700;
             font-size: 27px;
             line-height: normal;
-            color: ${COLORS.SECONDARY};
+            color: ${COLORS.TERCIARY};
         }
 
         &:focus {
@@ -124,7 +124,7 @@ const SignUpForm = styled.form`
         height: 70px;
         border-radius: 6px;
         border: 1px solid #1877F2;
-        background-color: ${COLORS.TERCIARY};
+        background-color: ${COLORS.QUATERNARY};
         font-family: ${FONTS.SECONDARY};
         font-weight: 700;
         font-size: 27px;
@@ -142,14 +142,14 @@ const SignUpForm = styled.form`
         }
     }
     a {
-        font-family: ${FONTS.SECONDARY};
+        font-family: ${FONTS.LINKS};
         font-weight: 400;
         font-size: 20px;
         line-height: 24px;
 
         text-decoration-line: underline;
 
-        color: ${COLORS.QUATERNARY};
+        color: ${COLORS.LINKS};
         ${mediaQuery} {
             margin-top: 25px;
         }
@@ -161,5 +161,5 @@ const SignUpForm = styled.form`
   width: 1000px;
   margin: auto;
 `
-
+  
 

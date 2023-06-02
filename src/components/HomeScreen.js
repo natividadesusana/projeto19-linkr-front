@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import FONTS from "../constants/Fonts";
 
 export default function HomeScreen() {
 
@@ -43,7 +44,7 @@ const MainContent = styled.main`
         margin: 0px;
     }
     span {
-        font-family: 'Passion One';
+        font-family: ${FONTS.BIGTITLE};
         font-style: normal;
         font-weight: 700;
         font-size: 106px;

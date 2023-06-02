@@ -1,5 +1,6 @@
 const FONTS = {
-    PRIMARY: 'Lato',
+    BIGTITLE: 'Passion One',
+    LINKS: 'Lato',
     SECONDARY: 'Oswald',
 
 }
