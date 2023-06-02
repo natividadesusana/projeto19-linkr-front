@@ -3,7 +3,6 @@ import HomeScreen from "../../components/HomeScreen";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import COLORS from "../../constants/Colors";
 import FONTS from "../../constants/Fonts";
 
 export default function Signup() {

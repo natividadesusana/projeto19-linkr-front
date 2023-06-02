@@ -40,9 +40,15 @@ export default function Home() {
   const [editingDescription, setEditingDescription] = useState(null);
   const descriptionRefs = useRef({});
 
+
+  // Carregar posts ao carregar a página
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/posts`)
+    .get(`${process.env.REACT_APP_API_URL}/posts`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
       .then((res) => {
         const sortedPosts = res.data.sort((a, b) => b.id - a.id);
         const recentPosts = sortedPosts.slice(0, 20);
@@ -60,6 +66,8 @@ export default function Home() {
       });
   }, []);
 
+
+  // Lidar com a publicação de um post
   const handlePublish = useCallback(() => {
     if (url === "") {
       alert("Please fill in the URL");
@@ -68,11 +76,15 @@ export default function Home() {
 
     setPublishing(true);
 
-    setTimeout(() => {
+    setTimeout(() => { // timeout para mostrar os requisitos mais devagar
       axios
         .post(`${process.env.REACT_APP_API_URL}/posts`, {
           url: url,
           description: description,
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         })
         .then((res) => {
           setUrl("");
@@ -90,12 +102,18 @@ export default function Home() {
     }, 1000);
   }, [url, description, posts]);
 
+
+  // Lidar com a exclusão de um post
   const handleDeletePost = useCallback(() => {
     setDeleting(true);
 
     setTimeout(() => {
       axios
-        .delete(`${process.env.REACT_APP_API_URL}/posts/${selectedPostId}`)
+        .delete(`${process.env.REACT_APP_API_URL}/posts/${selectedPostId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
         .then(() => {
           const updatedPosts = posts.filter(
             (post) => post.id !== selectedPostId
@@ -113,6 +131,8 @@ export default function Home() {
     }, 1000);
   }, [posts, selectedPostId]);
 
+
+  // Lidar com o clique no botão de editar
   const handleEditClick = useCallback(
     (postId) => {
       if (editingDescription === postId) {
@@ -124,6 +144,8 @@ export default function Home() {
     [editingDescription]
   );
 
+
+  // Lidar com a tecla pressionada
   const handleKeyPress = useCallback(
     (event) => {
       if (event.key === "Enter") {
@@ -133,12 +155,16 @@ export default function Home() {
     [handlePublish]
   );
 
+
+  // Focar na caixa de edição ao iniciar a edição
   useEffect(() => {
     if (editingDescription && descriptionRefs.current[editingDescription]) {
       descriptionRefs.current[editingDescription].focus();
     }
   }, [editingDescription, descriptionRefs]);
 
+
+  // Salvar a edição de um post
   const handleSaveEdit = (postId) => {
     const updatedDescription = descriptionRefs.current[postId].value;
 
@@ -148,6 +174,10 @@ export default function Home() {
       .put(`${process.env.REACT_APP_API_URL}/posts/${postId}`, {
         url: posts.find((post) => post.id === postId).url,
         description: updatedDescription,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       })
       .then((res) => {
         setPosts((prevPosts) =>
@@ -169,6 +199,7 @@ export default function Home() {
         descriptionRefs.current[postId].disabled = false;
       });
   };
+
 
   return (
     <>
