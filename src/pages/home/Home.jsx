@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import Header from "../../components/Header/Header";
 import {
   Container,
@@ -10,13 +16,17 @@ import {
   PostBox,
   BoxInfosPost,
   Text,
+  Box,
 } from "./styled";
-import Contextapi from "../../context/Contextapi";
+import AuthContext from "../../context/AuthContext";
 import userIcon from "../../assets/images/userIcon.jpeg";
 import axios from "axios";
+import { AiFillDelete, AiOutlineEdit as GrEdit } from "react-icons/ai";
+import DeleteModal from "../../components/DeleteModal/DeleteModal";
+import loadingImage from "../../assets/images/loadingImage.gif";
 
 export default function Home() {
-  const { picture_url, username } = useContext(Contextapi);
+  const { picture_url, userName } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -24,6 +34,11 @@ export default function Home() {
   const [emptyPosts, setEmptyPosts] = useState(false);
   const [loading, setLoading] = useState(true);
   const [publishing, setPublishing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [editingDescription, setEditingDescription] = useState(null);
+  const descriptionRefs = useRef({});
 
   useEffect(() => {
     axios
@@ -75,6 +90,40 @@ export default function Home() {
     }, 1000);
   }, [url, description, posts]);
 
+  const handleDeletePost = useCallback(() => {
+    setDeleting(true);
+
+    setTimeout(() => {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/posts/${selectedPostId}`)
+        .then(() => {
+          const updatedPosts = posts.filter(
+            (post) => post.id !== selectedPostId
+          );
+          setPosts(updatedPosts);
+          setShowDeleteModal(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("An error occurred while deleting the post");
+        })
+        .finally(() => {
+          setDeleting(false);
+        });
+    }, 1000);
+  }, [posts, selectedPostId]);
+
+  const handleEditClick = useCallback(
+    (postId) => {
+      if (editingDescription === postId) {
+        setEditingDescription(null);
+      } else {
+        setEditingDescription(postId);
+      }
+    },
+    [editingDescription]
+  );
+
   const handleKeyPress = useCallback(
     (event) => {
       if (event.key === "Enter") {
@@ -83,6 +132,43 @@ export default function Home() {
     },
     [handlePublish]
   );
+
+  useEffect(() => {
+    if (editingDescription && descriptionRefs.current[editingDescription]) {
+      descriptionRefs.current[editingDescription].focus();
+    }
+  }, [editingDescription, descriptionRefs]);
+
+  const handleSaveEdit = (postId) => {
+    const updatedDescription = descriptionRefs.current[postId].value;
+
+    descriptionRefs.current[postId].disabled = true;
+
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/posts/${postId}`, {
+        url: posts.find((post) => post.id === postId).url,
+        description: updatedDescription,
+      })
+      .then((res) => {
+        setPosts((prevPosts) =>
+          prevPosts.map((prevPost) => {
+            if (prevPost.id === postId) {
+              return {
+                ...prevPost,
+                description: updatedDescription,
+              };
+            }
+            return prevPost;
+          })
+        );
+        setEditingDescription(null);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("An error occurred while saving the edit");
+        descriptionRefs.current[postId].disabled = false;
+      });
+  };
 
   return (
     <>
@@ -125,7 +211,7 @@ export default function Home() {
         </PublicationBox>
 
         {loading ? (
-          <p>Loading...</p>
+          <img src={loadingImage} alt="Loading..." />
         ) : error ? (
           <script>{`alert("An error occurred while trying to fetch the posts, please refresh the page")`}</script>
         ) : emptyPosts ? (
@@ -142,8 +228,35 @@ export default function Home() {
 
               <BoxInfosPost>
                 <Text>
-                  <h1>{username ? username : "Anonymous"}</h1>
-                  <h2>{post.description}</h2>
+                  <Box>
+                    <h1>{userName ? userName : "Anonymous"}</h1>
+                    <div>
+                      <GrEdit onClick={() => handleEditClick(post.id)} />
+                      <AiFillDelete
+                        onClick={() => {
+                          setSelectedPostId(post.id);
+                          setShowDeleteModal(true);
+                        }}
+                      />
+                    </div>
+                  </Box>
+
+                  {editingDescription === post.id ? (
+                    <input
+                      className="textarea"
+                      defaultValue={post.description}
+                      ref={(ref) => (descriptionRefs.current[post.id] = ref)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleSaveEdit(post.id);
+                        } else if (e.key === "Escape") {
+                          handleEditClick(post.id);
+                        }
+                      }}
+                    />
+                  ) : (
+                    <p>{post.description}</p>
+                  )}
                 </Text>
                 <a href={post.url} target="_blank" rel="noopener noreferrer">
                   Go to page
@@ -153,6 +266,13 @@ export default function Home() {
           ))
         )}
       </Container>
+
+      <DeleteModal
+        show={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeletePost}
+        deleting={deleting}
+      />
     </>
   );
 }

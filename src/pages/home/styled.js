@@ -9,11 +9,6 @@ export const Container = styled.div`
   align-content: left;
   margin: 150px auto 0;
 
-  p {
-    color: white;
-    font-size: 30px;
-  }
-
   @media screen and (min-width: 480px) {
     width: 45vw;
   }
@@ -84,6 +79,7 @@ export const BoxInfos = styled.div`
   .url {
     background-color: #efefef;
     border: none;
+    outline: none;
     border-radius: 5px;
     margin-bottom: 10px;
     font-family: "Assistant", sans-serif;
@@ -108,6 +104,7 @@ export const BoxInfos = styled.div`
   .description {
     background-color: #efefef;
     border: none;
+    outline: none;
     border-radius: 5px;
     margin-bottom: 10px;
     font-family: "Assistant", sans-serif;
@@ -116,19 +113,22 @@ export const BoxInfos = styled.div`
     padding-left: 10px;
     height: 100px;
     align-items: flex-start;
+
     &:disabled {
       background-color: #d3d3d3;
       cursor: not-allowed;
     }
-    .url:focus,
-    .description:focus {
+
+    &:focus {
       color: black;
     }
+
     @media screen and (min-width: 480px) {
       font-size: 16px;
       margin-left: none;
     }
   }
+
   button {
     padding: 10px;
     border-radius: 8px;
@@ -193,18 +193,9 @@ export const BoxInfosPost = styled.div`
 `;
 
 export const Text = styled.div`
-  h1 {
-    font-size: 25px;
-    padding-bottom: 10px;
-    margin-top: -20px;
+  width: 100%;
 
-    @media screen and (min-width: 480px) {
-      font-size: 20px;
-      padding-bottom: 15px;
-    }
-  }
-
-  h2 {
+  p {
     font-size: 25px;
     padding-bottom: 20px;
     color: #b9b9b9;
@@ -213,5 +204,50 @@ export const Text = styled.div`
       font-size: 20px;
       padding-bottom: 15px;
     }
+  }
+
+  .textarea {
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-family: "Assistant", sans-serif;
+    font-weight: 200;
+    font-size: 20px;
+    padding-left: 10px;
+    height: 38px;
+    width: 97%;
+    color: black;
+    outline: none;
+
+    @media screen and (min-width: 480px) {
+      font-size: 16px;
+    }
+  }
+  
+`;
+
+export const Box = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    font-size: 25px;
+    padding-bottom: 10px;
+
+    @media screen and (min-width: 480px) {
+      font-size: 20px;
+      padding-bottom: 15px;
+    }
+  }
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    width: 60px;
+    cursor: pointer;
   }
 `;
