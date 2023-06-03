@@ -1,38 +1,53 @@
-import axios from "axios";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
+import axios from 'axios'
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import AuthContext from '../context/AuthContext'
+
+export function useSignUp() {
+  const navigate = useNavigate()
+
+  return body => {
+    console.log(body)
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/sign-up`, body)
+      .then(res => {
+        console.log(res.data)
+        navigate('/')
+      })
+      .catch(err => alert(err.response.data))
+  }
+}
 
 export function useLogout() {
-    const { token, setToken, setUsername } = useContext(AuthContext);
-    const navigate = useNavigate();
-    const config = { headers: { Authorization: `Bearer ${token}` } };
-  
-    return () => {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/logout`, {}, config)
-        .then(() => {
-          setToken(undefined);
-          setUsername(undefined);
-          localStorage.clear();
-          navigate("/");
-        })
-        .catch((err) => alert(err.response.data));
-    };
+  const { token, setToken, setUser } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const config = { headers: { Authorization: `Bearer ${token}` } }
+
+  return () => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/logout`, {}, config)
+      .then(() => {
+        setToken(undefined)
+        setUser(undefined)
+        localStorage.clear()
+        navigate('/')
+      })
+      .catch(err => alert(err.response.data))
   }
+}
 export function useLogin() {
-  const { setUserName, setToken } = useContext(AuthContext)
+  const { setUser, setToken } = useContext(AuthContext)
   const navigate = useNavigate()
 
   return body => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/login`, body)
+      .post(`${process.env.REACT_APP_API_URL}/sign-in`, body)
       .then(res => {
-        setUserName(res.data.userName)
+        setUser(res.data)
         setToken(res.data.token)
-        localStorage.setItem('userName', res.data.userName)
+        localStorage.setItem('user', res.data)
         localStorage.setItem('token', res.data.token)
-        navigate('/home')
+        navigate('/timeline')
       })
       .catch(err => alert(err.response.data))
   }
