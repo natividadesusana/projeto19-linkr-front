@@ -1,9 +1,8 @@
 import styled from 'styled-components'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import COLORS from '../../constants/Colors'
 import FONTS from '../../constants/Fonts'
-import axios from 'axios'
 import { MoonLoader } from 'react-spinners'
 import HomeScreen from '../../components/HomeScreen'
 import { useLogin } from '../../services/auth'
@@ -12,10 +11,8 @@ import useForm from '../../hooks/useForm'
 export default function Signin() {
   const login = useLogin()
   const { form, handleForm } = useForm({ email: '', password: '' })
-  const [disabled, setDisabled] = useState(false)
+  const [disabled] = useState(false)
   const [loading, setLoading] = useState(false)
-  // const { email, password } = form
-  const navigate = useNavigate()
 
   function submitForm(e) {
     e.preventDefault()
@@ -46,6 +43,7 @@ export default function Signin() {
       <SignupContainer>
         <SignUpForm onSubmit={submitForm}>
           <input
+            data-test="email"
             placeholder="e-mail"
             type="email"
             name="email"
@@ -54,6 +52,7 @@ export default function Signin() {
             disabled={disabled}
           />
           <input
+            data-test="password"
             placeholder="password"
             type="password"
             name="password"
@@ -62,13 +61,14 @@ export default function Signin() {
             disabled={disabled}
           />
           <button
+            data-test="login-btn"
             type="submit"
             disabled={disabled}
             onClick={() => setLoading(true)}
           >
             Log In
           </button>
-          <Link to={'/cadastro'}>
+          <Link data-test="sign-up-link" to={'/cadastro'}>
             {loading ? <MoonLoader /> : 'First time? Create an account!'}
           </Link>
         </SignUpForm>

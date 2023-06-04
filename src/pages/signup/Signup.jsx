@@ -21,7 +21,7 @@ export default function Signup() {
     e.preventDefault()
     setDisabled(true)
     signUp(form)
-    
+
     // axios
     //   .post(`${process.env.REACT_APP_BASE_URL}/sign-up`, form)
     //   .then(() => navigate('/'))
@@ -35,6 +35,7 @@ export default function Signup() {
       <SignupContainer>
         <SignUpForm onSubmit={createRegister}>
           <input
+            data-test="email"
             placeholder="e-mail"
             type="email"
             name="email"
@@ -43,6 +44,7 @@ export default function Signup() {
             disabled={disabled}
           />
           <input
+            data-test="password"
             placeholder="password"
             type="password"
             name="password"
@@ -51,6 +53,7 @@ export default function Signup() {
             disabled={disabled}
           />
           <input
+            data-test="username"
             placeholder="username"
             type="text"
             name="username"
@@ -60,6 +63,7 @@ export default function Signup() {
             disabled={disabled}
           />
           <input
+            data-test="picture-url"
             placeholder="picture url"
             type="text"
             required
@@ -69,13 +73,16 @@ export default function Signup() {
             disabled={disabled}
           />
           <button
+            data-test="sign-up-btn"
             type="submit"
             disabled={disabled}
             onClick={() => setDisabled(false)}
           >
             Sign Up
           </button>
-          <Link to={'/'}>Switch back to log in</Link>
+          <Link data-test="login-link" to={'/'}>
+            Switch back to log in
+          </Link>
         </SignUpForm>
       </SignupContainer>
     </Main>

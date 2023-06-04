@@ -23,11 +23,16 @@ export default function Header() {
           <AiOutlineDown />
         </Icon>
         <UserImage
+          data-test="avatar"
           src={!picture_url ? userIcon : picture_url}
           alt="User Image"
         />
         {showLogoutOption && (
-          <LogoutOption onClick={logout}>Logout</LogoutOption>
+          <LogoutOption data-test="menu">
+            <div data-test="logout" onClick={logout}>
+              Logout
+            </div>
+          </LogoutOption>
         )}
       </Menu>
     </Container>
