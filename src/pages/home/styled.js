@@ -49,10 +49,10 @@ export const BoxImage = styled.div`
 `;
 
 export const UserImage = styled.img`
-  height: 4vw;
+ width: 4.5vw;
+  height: 4.5vw;
   max-height: 100px;
-  border-radius: 100%;
-  border: 1px solid black;
+  border-radius: 50%;
 
   @media screen and (max-width: 480px) {
     display: none;

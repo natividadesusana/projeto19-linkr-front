@@ -26,7 +26,8 @@ import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import loadingImage from "../../assets/images/loadingImage.gif";
 
 export default function Home() {
-  const { picture_url, userName } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
+  const picture_url = user.pictureUrl;
   const [posts, setPosts] = useState([]);
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -39,18 +40,15 @@ export default function Home() {
   const [deleting, setDeleting] = useState(false);
   const [editingDescription, setEditingDescription] = useState(null);
   const descriptionRefs = useRef({});
-
+  const config = { headers: { Authorization: `Bearer ${token}` } };
 
   // Carregar posts ao carregar a página
   useEffect(() => {
     axios
-    .get(`${process.env.REACT_APP_API_URL}/posts`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
+      .get(`${process.env.REACT_APP_API_URL}/posts`, config)
       .then((res) => {
         const sortedPosts = res.data.sort((a, b) => b.id - a.id);
+        console.log(res.data);
         const recentPosts = sortedPosts.slice(0, 20);
         setPosts(recentPosts);
         setEmptyPosts(recentPosts.length === 0);
@@ -66,9 +64,8 @@ export default function Home() {
       });
   }, []);
 
-
   // Lidar com a publicação de um post
-  const handlePublish = useCallback(() => {
+  const handlePublish = useCallback(async () => {
     if (url === "") {
       alert("Please fill in the URL");
       return;
@@ -76,61 +73,57 @@ export default function Home() {
 
     setPublishing(true);
 
-    setTimeout(() => { // timeout para mostrar os requisitos mais devagar
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/posts`, {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/posts`,
+        {
           url: url,
           description: description,
-        }, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((res) => {
-          setUrl("");
-          setDescription("");
-          setPosts([res.data, ...posts]);
-          window.location.reload();
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("There was an error while publishing your link");
-        })
-        .finally(() => {
-          setPublishing(false);
-        });
-    }, 1000);
-  }, [url, description, posts]);
+        },
+        config
+      );
 
+      // Buscar os posts atualizados do servidor
+      const updatedPostsResponse = await axios.get(
+        `${process.env.REACT_APP_API_URL}/posts`,
+        config
+      );
+      const sortedPosts = updatedPostsResponse.data.sort((a, b) => b.id - a.id);
+      const recentPosts = sortedPosts.slice(0, 20);
+
+      setPosts(recentPosts);
+      setEmptyPosts(recentPosts.length === 0);
+      setUrl("");
+      setDescription("");
+    } catch (error) {
+      console.error(error);
+      alert("There was an error while publishing your link");
+    } finally {
+      setPublishing(false);
+    }
+  }, [url, description]);
 
   // Lidar com a exclusão de um post
-  const handleDeletePost = useCallback(() => {
+  const handleDeletePost = useCallback(async () => {
     setDeleting(true);
 
-    setTimeout(() => {
-      axios
-        .delete(`${process.env.REACT_APP_API_URL}/posts/${selectedPostId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then(() => {
-          const updatedPosts = posts.filter(
-            (post) => post.id !== selectedPostId
-          );
-          setPosts(updatedPosts);
-          setShowDeleteModal(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("An error occurred while deleting the post");
-        })
-        .finally(() => {
-          setDeleting(false);
-        });
-    }, 1000);
-  }, [posts, selectedPostId]);
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/posts/${selectedPostId}`,
+        config
+      );
 
+      const updatedPosts = posts.filter((post) => post.id !== selectedPostId);
+      console.log(updatedPosts);
+      setPosts(updatedPosts);
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while deleting the post");
+    } finally {
+      setDeleting(false);
+    }
+  }, [posts, selectedPostId]);
 
   // Lidar com o clique no botão de editar
   const handleEditClick = useCallback(
@@ -144,7 +137,6 @@ export default function Home() {
     [editingDescription]
   );
 
-
   // Lidar com a tecla pressionada
   const handleKeyPress = useCallback(
     (event) => {
@@ -155,7 +147,6 @@ export default function Home() {
     [handlePublish]
   );
 
-
   // Focar na caixa de edição ao iniciar a edição
   useEffect(() => {
     if (editingDescription && descriptionRefs.current[editingDescription]) {
@@ -163,23 +154,22 @@ export default function Home() {
     }
   }, [editingDescription, descriptionRefs]);
 
-
   // Salvar a edição de um post
-  const handleSaveEdit = (postId) => {
-    const updatedDescription = descriptionRefs.current[postId].value;
+  const handleSaveEdit = useCallback(
+    async (postId) => {
+      const updatedDescription = descriptionRefs.current[postId].value;
 
-    descriptionRefs.current[postId].disabled = true;
+      descriptionRefs.current[postId].disabled = true;
 
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/posts/${postId}`, {
-        url: posts.find((post) => post.id === postId).url,
-        description: updatedDescription,
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
+      try {
+        await axios.put(
+          `${process.env.REACT_APP_API_URL}/posts/${postId}`,
+          {
+            url: posts.find((post) => post.id === postId).url,
+            description: updatedDescription,
+          },
+          config
+        );
         setPosts((prevPosts) =>
           prevPosts.map((prevPost) => {
             if (prevPost.id === postId) {
@@ -192,14 +182,14 @@ export default function Home() {
           })
         );
         setEditingDescription(null);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
         alert("An error occurred while saving the edit");
         descriptionRefs.current[postId].disabled = false;
-      });
-  };
-
+      }
+    },
+    [posts]
+  );
 
   return (
     <>
@@ -244,15 +234,18 @@ export default function Home() {
         {loading ? (
           <img src={loadingImage} alt="Loading..." />
         ) : error ? (
-          <script>{`alert("An error occurred while trying to fetch the posts, please refresh the page")`}</script>
+          <p>
+            An error occurred while trying to fetch the posts, please refresh
+            the page
+          </p>
         ) : emptyPosts ? (
-          <script>{`alert("There are no posts yet")`}</script>
+          <p>There are no posts yet</p>
         ) : (
           posts.map((post) => (
-            <PostBox key={post.id}>
+            <PostBox>
               <BoxImage>
                 <UserImage
-                  src={!picture_url ? userIcon : picture_url}
+                  src={!post.img ? userIcon : post.img}
                   alt="User Image"
                 />
               </BoxImage>
@@ -260,7 +253,7 @@ export default function Home() {
               <BoxInfosPost>
                 <Text>
                   <Box>
-                    <h1>{userName ? userName : "Anonymous"}</h1>
+                    <h1>{post.userName ? post.userName : "Anonymous"}</h1>
                     <div>
                       <GrEdit onClick={() => handleEditClick(post.id)} />
                       <AiFillDelete
@@ -307,4 +300,3 @@ export default function Home() {
     </>
   );
 }
-
