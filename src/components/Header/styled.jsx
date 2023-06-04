@@ -50,14 +50,17 @@ export const Icon = styled.div`
 `;
 
 export const UserImage = styled.img`
-  height: 4vw;
-  border-radius: 100%;
+  width: 4.5vw;
+  height: 4.5vw;
+  border-radius: 50%;
   cursor: pointer;
 
   @media screen and (max-width: 480px) {
+    width: 6vh;
     height: 6vh;
   }
 `;
+
 
 export const LogoutOption = styled.div`
   color: white;

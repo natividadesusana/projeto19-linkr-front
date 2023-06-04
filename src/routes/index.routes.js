@@ -9,6 +9,5 @@ const Routes = () => {
         {path: "/cadastro", element: <Signup/>},
         {path: "/timeline", element: <Home/>},
     ])
-
 }
 export default Routes

@@ -1,9 +1,7 @@
 import styled from 'styled-components'
 import HomeScreen from '../../components/HomeScreen'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import axios from 'axios'
-import COLORS from '../../constants/Colors'
 import FONTS from '../../constants/Fonts'
 import useForm from '../../hooks/useForm'
 import { useSignUp } from '../../services/auth'
@@ -23,6 +21,7 @@ export default function Signup() {
     e.preventDefault()
     setDisabled(true)
     signUp(form)
+    
     // axios
     //   .post(`${process.env.REACT_APP_BASE_URL}/sign-up`, form)
     //   .then(() => navigate('/'))

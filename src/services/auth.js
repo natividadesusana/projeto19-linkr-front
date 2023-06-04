@@ -45,7 +45,7 @@ export function useLogin() {
       .then(res => {
         setUser(res.data)
         setToken(res.data.token)
-        localStorage.setItem('user', res.data)
+        localStorage.setItem('user', JSON.stringify(res.data))
         localStorage.setItem('token', res.data.token)
         navigate('/timeline')
       })
