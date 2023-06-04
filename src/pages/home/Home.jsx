@@ -261,15 +261,19 @@ export default function Home() {
                     <h1 data-test="username">
                       {post.userName ? post.userName : 'Anonymous'}
                     </h1>
-                    <div>
-                      <GrEdit onClick={() => handleEditClick(post.id)} />
-                      <AiFillDelete
-                        onClick={() => {
-                          setSelectedPostId(post.id)
-                          setShowDeleteModal(true)
-                        }}
-                      />
-                    </div>
+                    {post.userId !== user.id ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <GrEdit onClick={() => handleEditClick(post.id)} />
+                        <AiFillDelete
+                          onClick={() => {
+                            setSelectedPostId(post.id)
+                            setShowDeleteModal(true)
+                          }}
+                        />
+                      </div>
+                    )}
                   </Box>
 
                   {editingDescription === post.id ? (
