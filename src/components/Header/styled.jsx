@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
   background-color: black;
@@ -18,7 +18,7 @@ export const Container = styled.div`
     width: 100vw;
     padding: 0 10px;
   }
-`;
+`
 
 export const Menu = styled.div`
   display: flex;
@@ -30,11 +30,11 @@ export const Menu = styled.div`
   @media screen and (max-width: 480px) {
     width: 20vw;
   }
-`;
+`
 
 export const Title = styled.h1`
   color: white;
-  font-family: "Oleo Script", cursive;
+  font-family: 'Oleo Script', cursive;
   font-size: 40px;
   padding-left: 30px;
 
@@ -42,12 +42,12 @@ export const Title = styled.h1`
     font-size: 30px;
     padding-left: 10px;
   }
-`;
+`
 
 export const Icon = styled.div`
   color: white;
   cursor: pointer;
-`;
+`
 
 export const UserImage = styled.img`
   width: 4.5vw;
@@ -59,8 +59,7 @@ export const UserImage = styled.img`
     width: 6vh;
     height: 6vh;
   }
-`;
-
+`
 
 export const LogoutOption = styled.div`
   color: white;
@@ -73,4 +72,4 @@ export const LogoutOption = styled.div`
   padding: 15px;
   padding-right: 70px;
   border-radius: 10px;
-`;
+`
