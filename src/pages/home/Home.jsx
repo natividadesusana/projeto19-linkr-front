@@ -283,7 +283,7 @@ export default function Home() {
                   </span>
                   <StyledTooltip anchorSelect="#likes-tooltip" place="bottom" effect="solid">
                     <p data-test="tooltip">
-                      {tooltipText}, João e outras {Math.max(0, post.likes - 2)} pessoas curtiram
+                      {tooltipText}, Beltrano e outras {Math.max(0, post.likes - 2)} pessoas curtiram
                     </p>
                   </StyledTooltip>
                 </ButtonLikeContainer>
