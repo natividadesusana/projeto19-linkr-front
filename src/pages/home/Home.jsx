@@ -17,14 +17,14 @@ import {
   PostBox,
   BoxInfosPost,
   Text,
-  Box,
-} from "./styled";
-import AuthContext from "../../context/AuthContext";
-import userIcon from "../../assets/images/userIcon.jpeg";
-import axios from "axios";
-import { AiFillDelete, AiOutlineEdit as GrEdit } from "react-icons/ai";
-import DeleteModal from "../../components/DeleteModal/DeleteModal";
-import loadingImage from "../../assets/images/loadingImage.gif";
+  Box
+} from './styled'
+import AuthContext from '../../context/AuthContext'
+import userIcon from '../../assets/images/userIcon.jpeg'
+import axios from 'axios'
+import { AiFillDelete, AiOutlineEdit as GrEdit} from 'react-icons/ai'
+import DeleteModal from '../../components/DeleteModal/DeleteModal'
+import loadingImage from '../../assets/images/loadingImage.gif'
 
 export default function Home() {
   const { user, token } = useContext(AuthContext);

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
   width: 90vw;
@@ -9,17 +9,25 @@ export const Container = styled.div`
   align-content: left;
   margin: 150px auto 0;
 
-  @media screen and (min-width: 480px) {
+  @media (max-width: 480px) {
+    width: 100vw;
+  }
+
+  @media screen and (min-width: 650px) {
     width: 45vw;
   }
-`;
+`
 
 export const Title = styled.h2`
   color: white;
   font-size: 35px;
-  font-family: "Noto Sans Thai", sans-serif;
-  margin-bottom: 50px;
-`;
+  font-family: 'Noto Sans Thai', sans-serif;
+  margin-bottom: 80px;
+  margin-top: 50px;
+  @media (max-width: 650px) {
+    margin-top: 80px;
+  }
+`
 
 export const PublicationBox = styled.div`
   background-color: white;
@@ -34,7 +42,7 @@ export const PublicationBox = styled.div`
   @media screen and (min-width: 480px) {
     flex-direction: row;
   }
-`;
+`
 
 export const BoxImage = styled.div`
   height: 100%;
@@ -46,10 +54,10 @@ export const BoxImage = styled.div`
   @media screen and (min-width: 480px) {
     margin-bottom: 0;
   }
-`;
+`
 
 export const UserImage = styled.img`
- width: 4.5vw;
+  width: 4.5vw;
   height: 4.5vw;
   max-height: 100px;
   border-radius: 50%;
@@ -57,7 +65,7 @@ export const UserImage = styled.img`
   @media screen and (max-width: 480px) {
     display: none;
   }
-`;
+`
 
 export const BoxInfos = styled.div`
   display: flex;
@@ -66,7 +74,7 @@ export const BoxInfos = styled.div`
   align-items: left;
   height: 100%;
   width: 100%;
-  font-family: "Assistant", sans-serif;
+  font-family: 'Assistant', sans-serif;
   font-weight: 200;
   margin-left: 20px;
 
@@ -82,7 +90,7 @@ export const BoxInfos = styled.div`
     outline: none;
     border-radius: 5px;
     margin-bottom: 10px;
-    font-family: "Assistant", sans-serif;
+    font-family: 'Assistant', sans-serif;
     font-weight: 200;
     font-size: 20px;
     padding-left: 10px;
@@ -107,7 +115,7 @@ export const BoxInfos = styled.div`
     outline: none;
     border-radius: 5px;
     margin-bottom: 10px;
-    font-family: "Assistant", sans-serif;
+    font-family: 'Assistant', sans-serif;
     font-weight: 200;
     font-size: 20px;
     padding-left: 10px;
@@ -150,7 +158,7 @@ export const BoxInfos = styled.div`
   @media screen and (min-width: 480px) {
     width: 37vw;
   }
-`;
+`
 
 export const PostBox = styled.div`
   background-color: black;
@@ -164,7 +172,7 @@ export const PostBox = styled.div`
   @media screen and (min-width: 480px) {
     flex-direction: row;
   }
-`;
+`
 
 export const BoxInfosPost = styled.div`
   display: flex;
@@ -175,7 +183,7 @@ export const BoxInfosPost = styled.div`
   width: 100%;
   padding: 10px;
   font-weight: 400;
-  font-family: "Assistant", sans-serif;
+  font-family: 'Assistant', sans-serif;
   color: white;
 
   a {
@@ -190,7 +198,7 @@ export const BoxInfosPost = styled.div`
     width: 37vw;
     padding: 20px;
   }
-`;
+`
 
 export const Text = styled.div`
   width: 100%;
@@ -211,7 +219,7 @@ export const Text = styled.div`
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
-    font-family: "Assistant", sans-serif;
+    font-family: 'Assistant', sans-serif;
     font-weight: 200;
     font-size: 20px;
     padding-left: 10px;
@@ -224,8 +232,7 @@ export const Text = styled.div`
       font-size: 16px;
     }
   }
-  
-`;
+`
 
 export const Box = styled.div`
   display: flex;
@@ -250,4 +257,4 @@ export const Box = styled.div`
     width: 60px;
     cursor: pointer;
   }
-`;
+`
