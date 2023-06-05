@@ -47,6 +47,7 @@ export default function Home() {
   const [deleting, setDeleting] = useState(false)
   const [editingDescription, setEditingDescription] = useState(null)
   const [userLiked, setUserLiked] = useState({})
+  const [tooltipText, setTooltipText] = useState('')
   const descriptionRefs = useRef({})
   console.log(posts)
   const config = { headers: { Authorization: `Bearer ${token}` } }
@@ -266,10 +267,13 @@ export default function Home() {
                 </BoxImage>
                 <ButtonLikeContainer>
                   <LikeButton
-                    setUserLiked={(isLiked) => setUserLiked((prevUserLiked) => ({
-                      ...prevUserLiked,
-                      [post.id]: isLiked,
-                    }))}
+                    setUserLiked={(isLiked) => {
+                      setUserLiked((prevUserLiked) => ({
+                        ...prevUserLiked,
+                        [post.id]: isLiked,
+                      }));
+                      setTooltipText(isLiked ? 'Você' : 'Fulano');
+                    }}
                     isLiked={userLiked[post.id] || false}
                     postId={post.id}
                     userId={post.userId}
@@ -278,15 +282,9 @@ export default function Home() {
                     {post.likes} likes
                   </span>
                   <StyledTooltip anchorSelect="#likes-tooltip" place="bottom" effect="solid">
-                    {userLiked[post.id] ? (
-                      <p data-test="tooltip">
-                        Você, Fulano e outras {Math.max(0, post.likes - 2)} pessoas
-                      </p>
-                    ) : (
-                      <p data-test="tooltip">
-                        Fulano, Beltrano e outras {Math.max(0, post.likes - 2)} pessoas
-                      </p>
-                    )}
+                    <p data-test="tooltip">
+                      {tooltipText}, João e outras {Math.max(0, post.likes - 2)} pessoas curtiram
+                    </p>
                   </StyledTooltip>
                 </ButtonLikeContainer>
               </LikeAndImage>
