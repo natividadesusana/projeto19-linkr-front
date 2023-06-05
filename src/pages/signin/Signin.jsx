@@ -76,11 +76,11 @@ export default function Signin() {
     </Main>
   )
 }
-const mediaQuery = '@media (max-width: 768px)'
+const mediaQuery = "@media (max-width: 768px)";
 
 const Main = styled.div`
   display: flex;
-`
+`;
 const SignupContainer = styled.div`
   background-color: ${COLORS.BACKGROUND};
   width: 30%;
@@ -98,7 +98,7 @@ const SignupContainer = styled.div`
     width: 100%;
     top: 174px;
   }
-`
+`;
 
 const SignUpForm = styled.form`
   display: flex;
@@ -176,4 +176,4 @@ const SignUpForm = styled.form`
   }
   width: 1000px;
   margin: auto;
-`
+`;
