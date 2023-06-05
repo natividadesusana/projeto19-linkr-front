@@ -16,7 +16,10 @@ import {
   PostBox,
   BoxInfosPost,
   Text,
-  Box
+  Box,
+  StyledTooltip,
+  ButtonLikeContainer,
+  LikeAndImage
 } from './styled'
 import AuthContext from '../../context/AuthContext'
 import userIcon from '../../assets/images/userIcon.jpeg'
@@ -27,6 +30,7 @@ import DeleteModal from '../../components/DeleteModal/DeleteModal'
 import loadingImage from '../../assets/images/loadingImage.gif'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import LikeButton from '../../components/LikeButton'
 
 export default function Home() {
   const { user, token } = useContext(AuthContext)
@@ -42,6 +46,8 @@ export default function Home() {
   const [selectedPostId, setSelectedPostId] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [editingDescription, setEditingDescription] = useState(null)
+  const [userLiked, setUserLiked] = useState({})
+  const [tooltipText, setTooltipText] = useState('')
   const descriptionRefs = useRef({})
   console.log(posts)
   const config = { headers: { Authorization: `Bearer ${token}` } }
@@ -252,13 +258,36 @@ export default function Home() {
         ) : (
           posts.map(post => (
             <PostBox data-test="post">
-              <BoxImage>
-                <UserImage
-                  src={!post.img ? userIcon : post.img}
-                  alt="User Image"
-                />
-              </BoxImage>
-
+              <LikeAndImage>
+                <BoxImage>
+                  <UserImage
+                    src={!post.img ? userIcon : post.img}
+                    alt="User Image"
+                  />
+                </BoxImage>
+                <ButtonLikeContainer>
+                  <LikeButton
+                    setUserLiked={(isLiked) => {
+                      setUserLiked((prevUserLiked) => ({
+                        ...prevUserLiked,
+                        [post.id]: isLiked,
+                      }));
+                      setTooltipText(isLiked ? 'Você' : 'Fulano');
+                    }}
+                    isLiked={userLiked[post.id] || false}
+                    postId={post.id}
+                    userId={post.userId}
+                  />
+                  <span id="likes-tooltip" data-test="counter">
+                    {post.likes} likes
+                  </span>
+                  <StyledTooltip anchorSelect="#likes-tooltip" place="bottom" effect="solid">
+                    <p data-test="tooltip">
+                      {tooltipText}, Beltrano e outras {Math.max(0, post.likes - 2)} pessoas curtiram
+                    </p>
+                  </StyledTooltip>
+                </ButtonLikeContainer>
+              </LikeAndImage>
               <BoxInfosPost>
                 <Text>
                   <Box>
@@ -282,7 +311,6 @@ export default function Home() {
                       </div>
                     )}
                   </Box>
-
                   {editingDescription === post.id ? (
                     <input
                       className="textarea"
@@ -300,6 +328,7 @@ export default function Home() {
                     <p data-test="description">{post.description}</p>
                   )}
                 </Text>
+
                 <a
                   data-test="link"
                   href={post.url}
