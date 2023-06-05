@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react'
 import {
   DeleteModalContainer,
   ModalContent,
   ModalTitle,
-  ModalButtons,
-} from "./styled";
-import loadingImage from "../../assets/images/loadingImage.gif";
+  ModalButtons
+} from './styled'
+import loadingImage from '../../assets/images/loadingImage.gif'
 
 const DeleteModal = ({ show, onClose, onConfirm, deleting }) => {
   return (
@@ -20,8 +20,14 @@ const DeleteModal = ({ show, onClose, onConfirm, deleting }) => {
                 Are you sure you want to delete this post?
               </ModalTitle>
               <ModalButtons>
-                <button data-test="cancel" onClick={onClose}>No, go back</button>
-                <button data-test="confirm" onClick={onConfirm} disabled={deleting}>
+                <button data-test="cancel" onClick={onClose}>
+                  No, go back
+                </button>
+                <button
+                  data-test="confirm"
+                  onClick={onConfirm}
+                  disabled={deleting}
+                >
                   "Yes, delete it"
                 </button>
               </ModalButtons>
@@ -30,7 +36,7 @@ const DeleteModal = ({ show, onClose, onConfirm, deleting }) => {
         </DeleteModalContainer>
       )}
     </>
-  );
-};
+  )
+}
 
-export default DeleteModal;
+export default DeleteModal

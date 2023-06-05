@@ -24,8 +24,9 @@ export const Container = styled.div`
 
 export const Title = styled.h2`
   color: white;
-  font-size: 35px;
+  font-size: 43px;
   font-family: 'Noto Sans Thai', sans-serif;
+  font-weight: 700;
   margin-bottom: 80px;
   margin-top: 50px;
   @media (max-width: 650px) {

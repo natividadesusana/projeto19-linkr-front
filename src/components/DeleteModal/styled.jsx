@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const DeleteModalContainer = styled.div`
   position: fixed;
@@ -11,7 +11,7 @@ export const DeleteModalContainer = styled.div`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 9999;
-`;
+`
 
 export const ModalContent = styled.div`
   background-color: #333333;
@@ -20,7 +20,7 @@ export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
+`
 
 export const ModalTitle = styled.h3`
   text-align: center;
@@ -28,8 +28,7 @@ export const ModalTitle = styled.h3`
   color: white;
   font-size: 25px;
   margin-bottom: 10px;
-
-`;
+`
 
 export const ModalButtons = styled.div`
   display: flex;
@@ -45,4 +44,4 @@ export const ModalButtons = styled.div`
     font-size: 14px;
     cursor: pointer;
   }
-`;
+`
