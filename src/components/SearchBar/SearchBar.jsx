@@ -21,7 +21,6 @@ export default function SearchInput({ avatar }) {
   const searchContainerRef = useRef(null)
   const [selectedUser, setSelectedUser] = useState(null)
   const navigate = useNavigate()
-  console.log(users)
 
   useEffect(() => {
     if (username.length >= 3) {
@@ -31,7 +30,10 @@ export default function SearchInput({ avatar }) {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       response.then(res => setUsers(res.data))
-      response.catch(res => setUsers([]))
+      response.catch(res => {
+        setUsers()
+        console.log('Entrei')
+      })
     } else {
       setUsers([])
     }

@@ -3,10 +3,9 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useRef,
-  useMemo,
-} from "react";
-import Header from "../../components/Header/Header";
+  useRef
+} from 'react'
+import Header from '../../components/Header/Header'
 import {
   Container,
   Title,
@@ -21,178 +20,179 @@ import {
 } from './styled'
 import AuthContext from '../../context/AuthContext'
 import userIcon from '../../assets/images/userIcon.jpeg'
+import react from '../../assets/images/react.png'
 import axios from 'axios'
-import { AiFillDelete, AiOutlineEdit as GrEdit} from 'react-icons/ai'
+import { AiFillDelete, AiOutlineEdit as GrEdit } from 'react-icons/ai'
 import DeleteModal from '../../components/DeleteModal/DeleteModal'
 import loadingImage from '../../assets/images/loadingImage.gif'
+import { Link, useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 
 export default function Home() {
-  const { user, token } = useContext(AuthContext);
-  const picture_url = user.pictureUrl;
-  const [posts, setPosts] = useState([]);
-  const [url, setUrl] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState(false);
-  const [emptyPosts, setEmptyPosts] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [publishing, setPublishing] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState(null);
-  const [deleting, setDeleting] = useState(false);
-  const [editingDescription, setEditingDescription] = useState(null);
-  const descriptionRefs = useRef({});
-  const config = useMemo(
-    () => ({ headers: { Authorization: `Bearer ${token}` } }),
-    [token]
-  );
-  ///
+  const { user, token } = useContext(AuthContext)
+  const picture_url = user.pictureUrl
+  const [posts, setPosts] = useState([])
+  const [url, setUrl] = useState('')
+  const [description, setDescription] = useState('')
+  const [error, setError] = useState(false)
+  const [emptyPosts, setEmptyPosts] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [publishing, setPublishing] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [selectedPostId, setSelectedPostId] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+  const [editingDescription, setEditingDescription] = useState(null)
+  const descriptionRefs = useRef({})
+  console.log(posts)
+  const config = { headers: { Authorization: `Bearer ${token}` } }
+
   // Carregar posts ao carregar a página
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/posts`, config)
-      .then((res) => {
-        const sortedPosts = res.data.sort((a, b) => b.id - a.id);
-        const recentPosts = sortedPosts.slice(0, 20);
-        setPosts(recentPosts);
-        setEmptyPosts(recentPosts.length === 0);
-        setLoading(false);
+      .then(res => {
+        const sortedPosts = res.data.sort((a, b) => b.id - a.id)
+        const recentPosts = sortedPosts.slice(0, 20)
+        setPosts(recentPosts)
+        setEmptyPosts(recentPosts.length === 0)
+        setLoading(false)
       })
-      .catch((err) => {
-        console.error(err);
-        setError(true);
-        setLoading(false);
+      .catch(err => {
+        console.error(err)
+        setError(true)
+        setLoading(false)
         alert(
-          "An error occurred while trying to fetch the posts, please refresh the page"
-        );
-      });
-  }, [config]);
+          'An error occurred while trying to fetch the posts, please refresh the page'
+        )
+      })
+  }, [])
 
   // Lidar com a publicação de um post
   const handlePublish = useCallback(async () => {
-    if (url === "") {
-      alert("Please fill in the URL");
-      return;
+    if (url === '') {
+      alert('Please fill in the URL')
+      return
     }
 
-    setPublishing(true);
+    setPublishing(true)
 
     try {
-      console.log(url, description, config);
+      console.log(url, description, config)
       await axios.post(
         `${process.env.REACT_APP_API_URL}/posts`,
         {
           url: url,
-          description: description,
+          description: description
         },
         config
-      );
+      )
 
       // Buscar os posts atualizados do servidor
       const updatedPostsResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/posts`,
         config
-      );
-      const sortedPosts = updatedPostsResponse.data.sort((a, b) => b.id - a.id);
-      const recentPosts = sortedPosts.slice(0, 20);
+      )
+      const sortedPosts = updatedPostsResponse.data.sort((a, b) => b.id - a.id)
+      const recentPosts = sortedPosts.slice(0, 20)
 
-      setPosts(recentPosts);
-      setEmptyPosts(recentPosts.length === 0);
-      setUrl("");
-      setDescription("");
+      setPosts(recentPosts)
+      setEmptyPosts(recentPosts.length === 0)
+      setUrl('')
+      setDescription('')
     } catch (error) {
-      console.error(error);
-      alert("There was an error while publishing your link");
+      console.error(error)
+      alert('There was an error while publishing your link')
     } finally {
-      setPublishing(false);
+      setPublishing(false)
     }
-  }, [url, description, config]);
+  }, [url, description])
 
   // Lidar com a exclusão de um post
   const handleDeletePost = useCallback(async () => {
-    setDeleting(true);
+    setDeleting(true)
 
     try {
       await axios.delete(
         `${process.env.REACT_APP_API_URL}/posts/${selectedPostId}`,
         config
-      );
+      )
 
-      const updatedPosts = posts.filter((post) => post.id !== selectedPostId);
-      setPosts(updatedPosts);
-      setShowDeleteModal(false);
+      const updatedPosts = posts.filter(post => post.id !== selectedPostId)
+      setPosts(updatedPosts)
+      setShowDeleteModal(false)
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while deleting the post");
+      console.error(error)
+      alert('An error occurred while deleting the post')
     } finally {
-      setDeleting(false);
+      setDeleting(false)
     }
-  }, [posts, selectedPostId, config]);
+  }, [posts, selectedPostId])
 
   // Lidar com o clique no botão de editar
   const handleEditClick = useCallback(
-    (postId) => {
+    postId => {
       if (editingDescription === postId) {
-        setEditingDescription(null);
+        setEditingDescription(null)
       } else {
-        setEditingDescription(postId);
+        setEditingDescription(postId)
       }
     },
     [editingDescription]
-  );
+  )
 
   // Lidar com a tecla pressionada
   const handleKeyPress = useCallback(
-    (event) => {
-      if (event.key === "Enter") {
-        handlePublish();
+    event => {
+      if (event.key === 'Enter') {
+        handlePublish()
       }
     },
     [handlePublish]
-  );
+  )
 
   // Focar na caixa de edição ao iniciar a edição
   useEffect(() => {
     if (editingDescription && descriptionRefs.current[editingDescription]) {
-      descriptionRefs.current[editingDescription].focus();
+      descriptionRefs.current[editingDescription].focus()
     }
-  }, [editingDescription, descriptionRefs]);
+  }, [editingDescription, descriptionRefs])
 
   // Salvar a edição de um post
   const handleSaveEdit = useCallback(
-    async (postId) => {
-      const updatedDescription = descriptionRefs.current[postId].value;
+    async postId => {
+      const updatedDescription = descriptionRefs.current[postId].value
 
-      descriptionRefs.current[postId].disabled = true;
+      descriptionRefs.current[postId].disabled = true
 
       try {
         await axios.put(
           `${process.env.REACT_APP_API_URL}/posts/${postId}`,
           {
-            url: posts.find((post) => post.id === postId).url,
-            description: updatedDescription,
+            url: posts.find(post => post.id === postId).url,
+            description: updatedDescription
           },
           config
-        );
-        setPosts((prevPosts) =>
-          prevPosts.map((prevPost) => {
+        )
+        setPosts(prevPosts =>
+          prevPosts.map(prevPost => {
             if (prevPost.id === postId) {
               return {
                 ...prevPost,
-                description: updatedDescription,
-              };
+                description: updatedDescription
+              }
             }
-            return prevPost;
+            return prevPost
           })
-        );
-        setEditingDescription(null);
+        )
+        setEditingDescription(null)
       } catch (error) {
-        console.error(error);
-        alert("An error occurred while saving the edit");
-        descriptionRefs.current[postId].disabled = false;
+        console.error(error)
+        alert('An error occurred while saving the edit')
+        descriptionRefs.current[postId].disabled = false
       }
     },
-    [posts, config]
-  );
+    [posts]
+  )
 
   return (
     <>
@@ -216,7 +216,7 @@ export default function Home() {
               type="text"
               placeholder="http://..."
               value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={e => setUrl(e.target.value)}
               onKeyPress={handleKeyPress}
               disabled={publishing}
             />
@@ -226,7 +226,7 @@ export default function Home() {
               type="text"
               placeholder="Awesome article about #javascript"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={e => setDescription(e.target.value)}
               onKeyPress={handleKeyPress}
               disabled={publishing}
             />
@@ -235,7 +235,7 @@ export default function Home() {
               onClick={handlePublish}
               disabled={publishing}
             >
-              {publishing ? "Publishing..." : "Publish"}
+              {publishing ? 'Publishing...' : 'Publish'}
             </button>
           </BoxInfos>
         </PublicationBox>
@@ -250,7 +250,7 @@ export default function Home() {
         ) : emptyPosts ? (
           <p data-test="message">There are no posts yet</p>
         ) : (
-          posts.map((post) => (
+          posts.map(post => (
             <PostBox data-test="post">
               <BoxImage>
                 <UserImage
@@ -262,22 +262,21 @@ export default function Home() {
               <BoxInfosPost>
                 <Text>
                   <Box>
-                    <h1 data-test="username">
-                      {post.userName ? post.userName : "Anonymous"}
-                    </h1>
+                    <Link to={`/user/${post.userId}`}>
+                      <h1 data-test="username">
+                        {post.userName ? post.userName : 'Anonymous'}
+                      </h1>
+                    </Link>
+
                     {post.userId !== user.id ? (
                       <></>
                     ) : (
                       <div>
-                        <GrEdit
-                          data-test="edit-btn"
-                          onClick={() => handleEditClick(post.id)}
-                        />
+                        <GrEdit onClick={() => handleEditClick(post.id)} />
                         <AiFillDelete
-                          data-test="delete-btn"
                           onClick={() => {
-                            setSelectedPostId(post.id);
-                            setShowDeleteModal(true);
+                            setSelectedPostId(post.id)
+                            setShowDeleteModal(true)
                           }}
                         />
                       </div>
@@ -286,15 +285,14 @@ export default function Home() {
 
                   {editingDescription === post.id ? (
                     <input
-                      data-test="edit-input"
                       className="textarea"
                       defaultValue={post.description}
-                      ref={(ref) => (descriptionRefs.current[post.id] = ref)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleSaveEdit(post.id);
-                        } else if (e.key === "Escape") {
-                          handleEditClick(post.id);
+                      ref={ref => (descriptionRefs.current[post.id] = ref)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          handleSaveEdit(post.id)
+                        } else if (e.key === 'Escape') {
+                          handleEditClick(post.id)
                         }
                       }}
                     />
@@ -308,7 +306,19 @@ export default function Home() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Go to page
+                  {post.length > 0 ? (
+                    <>Go to page</>
+                  ) : (
+                    <MetaData>
+                      <TextMetaData>
+                        {/* <p>{post.urlDescr}</p> */}
+                        {/* <p>{post.url}</p> */}
+                      </TextMetaData>
+                      <>
+                        <img src={react} alt="" />
+                      </>
+                    </MetaData>
+                  )}
                 </a>
               </BoxInfosPost>
             </PostBox>
@@ -323,5 +333,19 @@ export default function Home() {
         deleting={deleting}
       />
     </>
-  );
+  )
 }
+
+const MetaData = styled.div`
+  display: flex;
+  img {
+    height: 100%;
+  }
+`
+
+const TextMetaData = styled.div`
+  width: 65%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+`

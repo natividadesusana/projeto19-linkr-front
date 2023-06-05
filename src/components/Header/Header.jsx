@@ -32,6 +32,7 @@ export default function Header() {
         )}
 
         <UserImage
+          onClick={handleIconClick}
           data-test="avatar"
           src={!picture_url ? userIcon : picture_url}
           alt="User Image"
