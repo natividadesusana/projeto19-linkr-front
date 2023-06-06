@@ -52,7 +52,7 @@ export default function Home() {
   const [userLiked, setUserLiked] = useState({});
   const [tooltipText, setTooltipText] = useState("");
   const [trendings, setTrendings] = useState([]);
-  const descriptionRefs = useRef({});
+  const descriptionRefs = useRef({})
 
   console.log(posts);
   const config = { headers: { Authorization: `Bearer ${token}` } };
