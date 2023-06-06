@@ -50,9 +50,8 @@ export default function Home() {
   const [userLiked, setUserLiked] = useState({})
   const [tooltipText, setTooltipText] = useState('')
   const descriptionRefs = useRef({})
-  console.log(posts)
   const config = { headers: { Authorization: `Bearer ${token}` } }
-
+  const navigate = useNavigate()
   // Carregar posts ao carregar a página
   useEffect(() => {
     axios
@@ -259,7 +258,7 @@ export default function Home() {
         ) : (
           posts.map(post => (
 
-            <PostBox data-test="post">
+            <PostBox data-test="post" key={post.id}>
               <LikeAndImage>
                 <BoxImage>
                   <UserImage
@@ -313,7 +312,7 @@ export default function Home() {
                       </div>
                     )}
                   </Box>
-                  <Tagify onClick={(text, type) => console.log(text, type)}>
+                  <Tagify onClick={(text, type) =>  navigate(`/hashtags/${text}`)}>
                     {editingDescription === post.id ? (
                       <input
                         className="textarea"
