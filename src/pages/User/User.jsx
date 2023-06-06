@@ -16,7 +16,9 @@ import {
   PostBox,
   BoxInfosPost,
   Text,
-  Box
+  Box,
+  FollowButton,
+  Menu
 } from './styled'
 import AuthContext from '../../context/AuthContext'
 import userIcon from '../../assets/images/userIcon.jpeg'
@@ -35,6 +37,9 @@ export default function User() {
   const [emptyPosts, setEmptyPosts] = useState(false)
   const [loading, setLoading] = useState(true)
   const [editingDescription, setEditingDescription] = useState(null)
+  const [isFollowing, setIsFollowing] = useState(true)
+  const [disabled, setDisabled] = useState(false)
+  const [isCurrentUser, setIsCurrentUser] = useState(false)
   const descriptionRefs = useRef({})
   const { id } = useParams()
   const config = { headers: { Authorization: `Bearer ${token}` } }
@@ -59,17 +64,23 @@ export default function User() {
         )
       })
   }, [])
-
+  //Comparar os ids, para comparar se é o usuário em questão setIsCurrentUser(id === user.id) ------
   return (
     <>
       <Header />
       <Container>
-        {posts.length > 0 ? (
-          <Title>{posts[0].post.userName}' posts</Title>
-        ) : (
-          <Title>LULA</Title>
-        )}
-
+        <Menu>
+          {posts.length > 0 ? (
+            <Title>{posts[0].post.userName}' posts</Title>
+          ) : (
+            <Title>LULA</Title>
+          )}
+          {!isCurrentUser && (
+            <FollowButton isFollowing={isFollowing} disabled={disabled}>
+              {isFollowing ? "Follow" : "Unfollow"}
+            </FollowButton>
+          )}
+        </Menu>
         {loading ? (
           <img src={loadingImage} alt="Loading..." />
         ) : error ? (
@@ -110,7 +121,7 @@ export default function User() {
             </PostBox>
           ))
         )}
-      </Container>
+      </Container >
     </>
   )
 }
