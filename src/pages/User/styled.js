@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import FONTS from '../../constants/Fonts'
 
 export const Container = styled.div`
   width: 90vw;
@@ -28,7 +29,6 @@ export const Title = styled.h2`
   font-family: 'Noto Sans Thai', sans-serif;
   font-weight: 700;
   margin-bottom: 80px;
-  margin-top: 50px;
   @media (max-width: 650px) {
     margin-top: 80px;
   }
@@ -271,3 +271,27 @@ export const Box = styled.div`
     cursor: pointer;
   }
 `
+export const FollowButton = styled.button`
+  background-color: ${(props) => props.isFollowing ? "#1877F2" : "#FFFFFF"};
+  width: 112px;
+  height: 31px;
+  border-radius: 5px;
+  border: 1px solid ${(props) => props.isFollowing ? "#1877F2" : "#FFFFFF"};
+  font-family: ${FONTS.LINKS}, normal;
+  font-weight: 700;
+  font-size: 14px;
+  color: ${(props) => !props.isFollowing ? "#1877F2" : "#FFFFFF"};
+  cursor: pointer;
+
+  &:disabled {
+      opacity: 0.1;
+      cursor: auto;
+      pointer-events: none;
+    }
+`;
+
+export const Menu = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+`;
