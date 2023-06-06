@@ -19,7 +19,9 @@ import {
   Box,
   StyledTooltip,
   ButtonLikeContainer,
-  LikeAndImage
+  LikeAndImage,
+  NewPostsButton,
+  Icon
 } from './styled'
 import AuthContext from '../../context/AuthContext'
 import userIcon from '../../assets/images/userIcon.jpeg'
@@ -32,6 +34,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import LikeButton from '../../components/LikeButton'
 import { Tagify } from 'react-tagify';
+import useInterval from 'use-interval';
 
 export default function Home() {
   const { user, token } = useContext(AuthContext)
@@ -49,7 +52,9 @@ export default function Home() {
   const [editingDescription, setEditingDescription] = useState(null)
   const [userLiked, setUserLiked] = useState({})
   const [tooltipText, setTooltipText] = useState('')
+  const [newPostsCount, setNewPostsCount] = useState(0);
   const descriptionRefs = useRef({})
+  const [lastUpdateTime, setLastUpdateTime] = useState(new Date().toISOString());
   console.log(posts)
   const config = { headers: { Authorization: `Bearer ${token}` } }
 
@@ -93,9 +98,11 @@ export default function Home() {
         },
         config
       )
+      setUrl('')
+      setDescription('')
 
       // Buscar os posts atualizados do servidor
-      const updatedPostsResponse = await axios.get(
+      /* const updatedPostsResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/posts`,
         config
       )
@@ -105,7 +112,7 @@ export default function Home() {
       setPosts(recentPosts)
       setEmptyPosts(recentPosts.length === 0)
       setUrl('')
-      setDescription('')
+      setDescription('') */
     } catch (error) {
       console.error(error)
       alert('There was an error while publishing your link')
@@ -201,6 +208,28 @@ export default function Home() {
     [posts]
   )
 
+  const fetchNewPostsCount = async () => {
+    console.log(lastUpdateTime)
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/posts/new-posts`, {
+        params: {
+          lastUpdate: lastUpdateTime, // Passa a data/hora da última atualização
+        },
+      });
+      const countPosts = Number(response.data.countPosts)
+      console.log(countPosts)
+      setNewPostsCount(countPosts)
+    } catch (error) {
+      console.error(error)
+    }
+  };
+
+  useInterval(fetchNewPostsCount, 15000)
+
+  const handleNewPosts = () => {
+    window.location.reload();
+  }
+
   return (
     <>
       <Header />
@@ -246,6 +275,12 @@ export default function Home() {
             </button>
           </BoxInfos>
         </PublicationBox>
+        {newPostsCount > 0 && (
+          <NewPostsButton onClick={handleNewPosts}>
+            {newPostsCount} new posts, load more!
+            <Icon />
+          </NewPostsButton>
+        )}
 
         {loading ? (
           <img src={loadingImage} alt="Loading..." />
@@ -259,7 +294,7 @@ export default function Home() {
         ) : (
           posts.map(post => (
 
-            <PostBox data-test="post">
+            <PostBox data-test="post" key={post.id}>
               <LikeAndImage>
                 <BoxImage>
                   <UserImage

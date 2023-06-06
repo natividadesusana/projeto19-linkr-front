@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import { Tooltip } from 'react-tooltip'
+import FONTS from '../../constants/Fonts'
+import { FiRefreshCcw } from 'react-icons/fi';
 
 export const Container = styled.div`
   width: 90vw;
@@ -308,3 +310,27 @@ export const LikeAndImage = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+export const NewPostsButton = styled.button`
+  background-color: #1877F2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.45);
+  border-radius: 16px;
+  border: 1px solid #1877F2;
+  height: 61px;
+  font-family: ${FONTS.LINKS}, normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #FFFFFF;
+  cursor: pointer;
+  margin-bottom: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+`
+
+export const Icon = styled(FiRefreshCcw)`
+  font-size: 22px;
+  font-weight: bold;
+`
