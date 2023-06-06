@@ -1,25 +1,38 @@
-import styled from 'styled-components'
+import styled from "styled-components";
+
+export const TrendingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 170px; 
+  height: 100vh;
+  overflow-y: scroll;
+  flex-direction: row;
+`;
 
 export const Container = styled.div`
   width: 90vw;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-content: left;
-  margin: 150px auto 0;
+  margin: 150px 80px;
+  p {
+    color: white;
+  }
 
   @media screen and (min-width: 480px) {
     width: 45vw;
   }
-`
+`;
 
 export const Title = styled.h2`
   color: white;
   font-size: 35px;
-  font-family: 'Noto Sans Thai', sans-serif;
-  margin-bottom: 50px;
-`
+  font-family: "Noto Sans Thai", sans-serif;
+  margin-bottom: 45px;
+`;
 
 export const BoxImage = styled.div`
   height: 100%;
@@ -31,7 +44,7 @@ export const BoxImage = styled.div`
   @media screen and (min-width: 480px) {
     margin-bottom: 0;
   }
-`
+`;
 
 export const UserImage = styled.img`
   width: 4.5vw;
@@ -42,12 +55,10 @@ export const UserImage = styled.img`
   @media screen and (max-width: 480px) {
     display: none;
   }
-`
+`;
 
 export const PostBox = styled.div`
   background-color: black;
-  height: auto;
-  min-height: 30vh;
   border-radius: 15px;
   margin-bottom: 50px;
   display: flex;
@@ -56,18 +67,16 @@ export const PostBox = styled.div`
   @media screen and (min-width: 480px) {
     flex-direction: row;
   }
-`
+`;
 
 export const BoxInfosPost = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: left;
-  height: 100%;
   width: 100%;
-  padding: 10px;
   font-weight: 400;
-  font-family: 'Assistant', sans-serif;
+  font-family: "Assistant", sans-serif;
   color: white;
 
   a {
@@ -82,7 +91,7 @@ export const BoxInfosPost = styled.div`
     width: 37vw;
     padding: 20px;
   }
-`
+`;
 
 export const Text = styled.div`
   width: 100%;
@@ -103,7 +112,7 @@ export const Text = styled.div`
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
-    font-family: 'Assistant', sans-serif;
+    font-family: "Assistant", sans-serif;
     font-weight: 200;
     font-size: 20px;
     padding-left: 10px;
@@ -116,7 +125,7 @@ export const Text = styled.div`
       font-size: 16px;
     }
   }
-`
+`;
 
 export const Box = styled.div`
   display: flex;
@@ -141,4 +150,56 @@ export const Box = styled.div`
     width: 60px;
     cursor: pointer;
   }
-`
+`;
+
+export const TrendingBox = styled.div`
+  background-color: #000000;
+  height: auto;
+  min-height: 50vh;
+  width: 23vw;
+  border-radius: 15px;
+  padding: 20px;
+  position: relative;
+  margin-top: 200px;
+
+  h1 {
+    color: white;
+    font-size: 30px;
+    font-family: "Noto Sans Thai", sans-serif;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  span {
+    color: white;
+    font-family: "Noto Sans Thai", sans-serif;
+    cursor: pointer;
+  }
+
+  ::before {
+    content: "";
+    position: absolute;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: gray;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    padding-bottom: 10px;
+  }
+
+  @media screen and (max-width: 480px) {
+    flex-direction: row;
+    display: none;
+  }
+`;

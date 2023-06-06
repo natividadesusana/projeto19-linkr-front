@@ -37,6 +37,7 @@ export const Title = styled.h1`
   font-family: 'Oleo Script', cursive;
   font-size: 40px;
   padding-left: 30px;
+  margin-right: -150px;
 
   @media screen and (max-width: 480px) {
     font-size: 30px;
