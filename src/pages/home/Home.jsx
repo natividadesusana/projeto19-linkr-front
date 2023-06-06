@@ -31,6 +31,7 @@ import loadingImage from '../../assets/images/loadingImage.gif'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import LikeButton from '../../components/LikeButton'
+import { Tagify } from 'react-tagify';
 
 export default function Home() {
   const { user, token } = useContext(AuthContext)
@@ -257,6 +258,7 @@ export default function Home() {
           <p data-test="message">There are no posts yet</p>
         ) : (
           posts.map(post => (
+
             <PostBox data-test="post">
               <LikeAndImage>
                 <BoxImage>
@@ -311,22 +313,25 @@ export default function Home() {
                       </div>
                     )}
                   </Box>
-                  {editingDescription === post.id ? (
-                    <input
-                      className="textarea"
-                      defaultValue={post.description}
-                      ref={ref => (descriptionRefs.current[post.id] = ref)}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                          handleSaveEdit(post.id)
-                        } else if (e.key === 'Escape') {
-                          handleEditClick(post.id)
-                        }
-                      }}
-                    />
-                  ) : (
-                    <p data-test="description">{post.description}</p>
-                  )}
+                  <Tagify onClick={(text, type) => console.log(text, type)}>
+                    {editingDescription === post.id ? (
+                      <input
+                        className="textarea"
+                        defaultValue={post.description}
+                        ref={ref => (descriptionRefs.current[post.id] = ref)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            handleSaveEdit(post.id)
+                          } else if (e.key === 'Escape') {
+                            handleEditClick(post.id)
+                          }
+                        }}
+                      />
+                    ) : (
+                      <p data-test="description">{post.description}</p>
+                    )}
+                  </Tagify>
+
                 </Text>
 
                 <a
@@ -340,17 +345,17 @@ export default function Home() {
                   ) : (
                     <MetaData>
                       <TextMetaData>
-                        {/* <p>{post.urlDescr}</p> */}
-                        {/* <p>{post.url}</p> */}
-                      </TextMetaData>
+                        <p>{post.urlDescr}</p>
+                        <p>{post.url}</p>
+                      </TextMetaData >
                       <>
                         <img src={react} alt="" />
                       </>
-                    </MetaData>
+                    </MetaData >
                   )}
-                </a>
-              </BoxInfosPost>
-            </PostBox>
+                </a >
+              </BoxInfosPost >
+            </PostBox >
           ))
         )}
       </Container>
