@@ -55,9 +55,8 @@ export default function Home() {
   const [newPostsCount, setNewPostsCount] = useState(0);
   const descriptionRefs = useRef({})
   const [lastUpdateTime, setLastUpdateTime] = useState(new Date().toISOString());
-  console.log(posts)
   const config = { headers: { Authorization: `Bearer ${token}` } }
-
+  const navigate = useNavigate()
   // Carregar posts ao carregar a página
   useEffect(() => {
     axios
@@ -348,7 +347,7 @@ export default function Home() {
                       </div>
                     )}
                   </Box>
-                  <Tagify onClick={(text, type) => console.log(text, type)}>
+                  <Tagify onClick={(text, type) =>  navigate(`/hashtags/${text}`)}>
                     {editingDescription === post.id ? (
                       <input
                         className="textarea"
