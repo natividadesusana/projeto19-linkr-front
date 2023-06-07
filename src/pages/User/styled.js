@@ -272,15 +272,15 @@ export const Box = styled.div`
   }
 `
 export const FollowButton = styled.button`
-  background-color: ${(props) => props.isFollowing ? "#1877F2" : "#FFFFFF"};
+  background-color: ${(props) => !props.isFollowing ? "#1877F2" : "#FFFFFF"};
   width: 112px;
   height: 31px;
   border-radius: 5px;
-  border: 1px solid ${(props) => props.isFollowing ? "#1877F2" : "#FFFFFF"};
+  border: 1px solid ${(props) => !props.isFollowing ? "#1877F2" : "#FFFFFF"};
   font-family: ${FONTS.LINKS}, normal;
   font-weight: 700;
   font-size: 14px;
-  color: ${(props) => !props.isFollowing ? "#1877F2" : "#FFFFFF"};
+  color: ${(props) => props.isFollowing ? "#1877F2" : "#FFFFFF"};
   cursor: pointer;
 
   &:disabled {
