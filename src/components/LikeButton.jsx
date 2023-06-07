@@ -8,7 +8,7 @@ export default function LikeButton({ setUserLiked, isLiked, postId, userId }) {
     const [liked, setLiked] = useState(isLiked);
     const { token } = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const body = { userId, postId };
+    const body = { userId, id: postId };
 
     const handleLike = () => {
         axios
