@@ -132,7 +132,7 @@ export default function User() {
             <Title>LULA</Title>
           )}
           {!isCurrentUser ? (
-            <FollowButton onClick={() => toggleFollow(!isFollowing ? "Follow" : "Unfollow")} isFollowing={isFollowing} disabled={disabled}>
+            <FollowButton data-test="follow-btn" onClick={() => toggleFollow(!isFollowing ? "Follow" : "Unfollow")} isFollowing={isFollowing} disabled={disabled}>
               {!isFollowing ? "Follow" : "Unfollow"}
             </FollowButton>
           ) : (
