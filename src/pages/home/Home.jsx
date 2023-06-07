@@ -24,6 +24,8 @@ import {
   TrendingBox,
   MetaData,
   TextMetaData,
+  NewPostsButton,
+  Icon
 } from "./styled";
 import AuthContext from "../../context/AuthContext";
 import userIcon from "../../assets/images/userIcon.jpeg";
@@ -32,8 +34,10 @@ import axios from "axios";
 import { AiFillDelete, AiOutlineEdit as GrEdit } from "react-icons/ai";
 import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import loadingImage from "../../assets/images/loadingImage.gif";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom'
 import LikeButton from "../../components/LikeButton";
+import { Tagify } from 'react-tagify';
+import useInterval from 'use-interval';
 
 export default function Home() {
   const { user, token } = useContext(AuthContext);
@@ -52,11 +56,14 @@ export default function Home() {
   const [userLiked, setUserLiked] = useState({});
   const [tooltipText, setTooltipText] = useState("");
   const [trendings, setTrendings] = useState([]);
+  const [newPostsCount, setNewPostsCount] = useState(0);
+  const [lastUpdateTime, setLastUpdateTime] = useState(new Date().toISOString());
   const descriptionRefs = useRef({})
+  const navigate = useNavigate()
 
-  console.log(posts);
   const config = { headers: { Authorization: `Bearer ${token}` } };
 
+  
   // Carregar posts ao carregar a página
   useEffect(() => {
     axios
@@ -98,9 +105,12 @@ export default function Home() {
         },
         config
       );
+      
+      setUrl('')
+      setDescription('')
 
       // Buscar os posts atualizados do servidor
-      const updatedPostsResponse = await axios.get(
+       const updatedPostsResponse = await axios.get(
         `${process.env.REACT_APP_API_URL}/posts`,
         config
       );
@@ -121,6 +131,10 @@ export default function Home() {
         ];
         setTrendings(Array.from(new Set(newTrendings)));
       }
+      setPosts(recentPosts)
+      setEmptyPosts(recentPosts.length === 0)
+      setUrl('')
+      setDescription('') 
     } catch (error) {
       console.error(error);
       alert("There was an error while publishing your link");
@@ -232,6 +246,28 @@ export default function Home() {
     // eslint-disable-next-line
   }, []);
 
+  const fetchNewPostsCount = async () => {
+    console.log(lastUpdateTime)
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/posts/new-posts`, {
+        params: {
+          lastUpdate: lastUpdateTime, // Passa a data/hora da última atualização
+        },
+      });
+      const countPosts = Number(response.data.countPosts)
+      console.log(countPosts)
+      setNewPostsCount(countPosts)
+    } catch (error) {
+      console.error(error)
+    }
+  };
+
+  useInterval(fetchNewPostsCount, 15000)
+
+  const handleNewPosts = () => {
+    window.location.reload();
+  }
+
   return (
     <>
       <Header />
@@ -247,152 +283,156 @@ export default function Home() {
               />
             </BoxImage>
 
-            <BoxInfos>
-              <h1>What are you going to share today?</h1>
-              <input
-                data-test="link"
-                className="url"
-                type="text"
-                placeholder="http://..."
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyPress={handleKeyPress}
-                disabled={publishing}
-              />
-              <input
-                data-test="description"
-                className="description"
-                type="text"
-                placeholder="Awesome article about #javascript"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                onKeyPress={handleKeyPress}
-                disabled={publishing}
-              />
-              <button
-                data-test="publish-btn"
-                onClick={handlePublish}
-                disabled={publishing}
-              >
-                {publishing ? "Publishing..." : "Publish"}
-              </button>
-            </BoxInfos>
-          </PublicationBox>
+          <BoxInfos>
+            <h1>What are you going to share today?</h1>
+            <input
+              data-test="link"
+              className="url"
+              type="text"
+              placeholder="http://..."
+              value={url}
+              onChange={e => setUrl(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={publishing}
+            />
+            <input
+              data-test="description"
+              className="description"
+              type="text"
+              placeholder="Awesome article about #javascript"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={publishing}
+            />
+            <button
+              data-test="publish-btn"
+              onClick={handlePublish}
+              disabled={publishing}
+            >
+              {publishing ? 'Publishing...' : 'Publish'}
+            </button>
+          </BoxInfos>
+        </PublicationBox>
+        {newPostsCount > 0 && (
+          <NewPostsButton onClick={handleNewPosts}>
+            {newPostsCount} new posts, load more!
+            <Icon />
+          </NewPostsButton>
+        )}
 
-          {loading ? (
-            <img src={loadingImage} alt="Loading..." />
-          ) : error ? (
-            <p>
-              An error occurred while trying to fetch the posts, please refresh
-              the page
-            </p>
-          ) : emptyPosts ? (
-            <p data-test="message">There are no posts yet</p>
-          ) : (
-            posts.map((post) => (
-              <PostBox data-test="post">
-                <LikeAndImage>
-                  <BoxImage>
-                    <UserImage
-                      src={!post.img ? userIcon : post.img}
-                      alt="User Image"
-                    />
-                  </BoxImage>
-                  <ButtonLikeContainer>
-                    <LikeButton
-                      setUserLiked={(isLiked) => {
-                        setUserLiked((prevUserLiked) => ({
-                          ...prevUserLiked,
-                          [post.id]: isLiked,
-                        }));
-                        setTooltipText(isLiked ? "Você" : "Fulano");
-                      }}
-                      isLiked={userLiked[post.id] || false}
-                      postId={post.id}
-                      userId={post.userId}
-                    />
-                    <span id="likes-tooltip" data-test="counter">
-                      {post.likes} likes
-                    </span>
-                    <StyledTooltip
-                      anchorSelect="#likes-tooltip"
-                      place="bottom"
-                      effect="solid"
-                    >
-                      <p data-test="tooltip">
-                        {tooltipText}, Beltrano e outras{" "}
-                        {Math.max(0, post.likes - 2)} pessoas curtiram
-                      </p>
-                    </StyledTooltip>
-                  </ButtonLikeContainer>
-                </LikeAndImage>
-                <BoxInfosPost>
-                  <Text>
-                    <Box>
-                      <Link to={`/user/${post.userId}`}>
-                        <h1 data-test="username">
-                          {post.userName ? post.userName : "Anonymous"}
-                        </h1>
-                      </Link>
+        {loading ? (
+          <img src={loadingImage} alt="Loading..." />
+        ) : error ? (
+          <p>
+            An error occurred while trying to fetch the posts, please refresh
+            the page
+          </p>
+        ) : emptyPosts ? (
+          <p data-test="message">There are no posts yet</p>
+        ) : (
+          posts.map(post => (
 
-                      {post.userId !== user.id ? (
-                        <></>
-                      ) : (
-                        <div>
-                          <GrEdit onClick={() => handleEditClick(post.id)} />
-                          <AiFillDelete
-                            onClick={() => {
-                              setSelectedPostId(post.id);
-                              setShowDeleteModal(true);
-                            }}
-                          />
-                        </div>
-                      )}
-                    </Box>
+            <PostBox data-test="post" key={post.id}>
+              <LikeAndImage>
+                <BoxImage>
+                  <UserImage
+                    src={!post.img ? userIcon : post.img}
+                    alt="User Image"
+                  />
+                </BoxImage>
+                <ButtonLikeContainer>
+                  <LikeButton
+                    setUserLiked={(isLiked) => {
+                      setUserLiked((prevUserLiked) => ({
+                        ...prevUserLiked,
+                        [post.id]: isLiked,
+                      }));
+                      setTooltipText(isLiked ? 'Você' : 'Fulano');
+                    }}
+                    isLiked={userLiked[post.id] || false}
+                    postId={post.id}
+                    userId={post.userId}
+                  />
+                  <span id="likes-tooltip" data-test="counter">
+                    {post.likes} likes
+                  </span>
+                  <StyledTooltip anchorSelect="#likes-tooltip" place="bottom" effect="solid">
+                    <p data-test="tooltip">
+                      {tooltipText}, Beltrano e outras {Math.max(0, post.likes - 2)} pessoas curtiram
+                    </p>
+                  </StyledTooltip>
+                </ButtonLikeContainer>
+              </LikeAndImage>
+              <BoxInfosPost>
+                <Text>
+                  <Box>
+                    <Link to={`/user/${post.userId}`}>
+                      <h1 data-test="username">
+                        {post.userName ? post.userName : 'Anonymous'}
+                      </h1>
+                    </Link>
+
+                    {post.userId !== user.id ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <GrEdit onClick={() => handleEditClick(post.id)} />
+                        <AiFillDelete
+                          onClick={() => {
+                            setSelectedPostId(post.id)
+                            setShowDeleteModal(true)
+                          }}
+                        />
+                      </div>
+                    )}
+                  </Box>
+                  <Tagify onClick={(text, type) =>  navigate(`/hashtags/${text}`)}>
                     {editingDescription === post.id ? (
                       <input
                         className="textarea"
                         defaultValue={post.description}
-                        ref={(ref) => (descriptionRefs.current[post.id] = ref)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleSaveEdit(post.id);
-                          } else if (e.key === "Escape") {
-                            handleEditClick(post.id);
+                        ref={ref => (descriptionRefs.current[post.id] = ref)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            handleSaveEdit(post.id)
+                          } else if (e.key === 'Escape') {
+                            handleEditClick(post.id)
                           }
                         }}
                       />
                     ) : (
                       <p data-test="description">{post.description}</p>
                     )}
-                  </Text>
+                  </Tagify>
 
-                  <a
-                    data-test="link"
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {post.length > 0 ? (
-                      <>Go to page</>
-                    ) : (
-                      <MetaData>
-                        <TextMetaData>
-                          {/* <p>{post.urlDescr}</p> */}
-                          {/* <p>{post.url}</p> */}
-                        </TextMetaData>
-                        <>
-                          <img src={react} alt="" />
-                        </>
-                      </MetaData>
-                    )}
-                  </a>
-                </BoxInfosPost>
-              </PostBox>
-            ))
-          )}
-        </Container>
+                </Text>
 
+                <a
+                  data-test="link"
+                  href={post.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {post.length > 0 ? (
+                    <>Go to page</>
+                  ) : (
+                    <MetaData>
+                      <TextMetaData>
+                        <p>{post.urlDescr}</p>
+                        <p>{post.url}</p>
+                      </TextMetaData >
+                      <>
+                        <img src={react} alt="" />
+                      </>
+                    </MetaData >
+                  )}
+                </a >
+              </BoxInfosPost >
+            </PostBox >
+          ))
+        )}
+      </Container>
         <TrendingBox>
           <h1>trending</h1>
           <div>
