@@ -315,7 +315,7 @@ export default function Home() {
           </BoxInfos>
         </PublicationBox>
         {newPostsCount > 0 && (
-          <NewPostsButton onClick={handleNewPosts}>
+          <NewPostsButton onClick={handleNewPosts} data-test="load-btn">
             {newPostsCount} new posts, load more!
             <Icon />
           </NewPostsButton>
