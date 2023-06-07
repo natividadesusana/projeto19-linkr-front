@@ -49,6 +49,6 @@ export function useLogin() {
         localStorage.setItem('token', res.data.token)
         navigate('/timeline')
       })
-      .catch(err => alert(err.response.data))
+      .catch(err => alert(err))
   }
 }

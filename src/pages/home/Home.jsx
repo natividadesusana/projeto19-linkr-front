@@ -32,6 +32,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import LikeButton from '../../components/LikeButton'
 import { Tagify } from 'react-tagify';
+import { MoonLoader } from 'react-spinners'
+
 
 export default function Home() {
   const { user, token } = useContext(AuthContext)
@@ -50,22 +52,33 @@ export default function Home() {
   const [userLiked, setUserLiked] = useState({})
   const [tooltipText, setTooltipText] = useState('')
   const descriptionRefs = useRef({})
-  console.log(posts)
+  const [nextPage, setNextPage] = useState('')
   const config = { headers: { Authorization: `Bearer ${token}` } }
+
+  const PAGE_LIMIT = 5
 
   // Carregar posts ao carregar a página
   useEffect(() => {
+    //scroll para o topo
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    })
     axios
-      .get(`${process.env.REACT_APP_API_URL}/posts`, config)
+      .get(`${process.env.REACT_APP_API_URL}/posts`, {
+        params: {
+          limit: PAGE_LIMIT,
+          offset: 0,
+        }
+      })
       .then(res => {
-        const sortedPosts = res.data.sort((a, b) => b.id - a.id)
-        const recentPosts = sortedPosts.slice(0, 20)
-        setPosts(recentPosts)
-        setEmptyPosts(recentPosts.length === 0)
+        console.log('next',res.data.nextUrl)
+        setNextPage(res.data.nextUrl)
+        setPosts(res.data.results)
+        // setEmptyPosts(recentPosts.length === 0)
         setLoading(false)
       })
       .catch(err => {
-        console.error(err)
         setError(true)
         setLoading(false)
         alert(
@@ -76,29 +89,15 @@ export default function Home() {
 
   // Lidar com a publicação de um post
   const handlePublish = useCallback(async () => {
-    if (url === '') {
-      alert('Please fill in the URL')
-      return
-    }
+    if (url === '') return alert('Please fill in the URL')
 
     setPublishing(true)
 
     try {
-      console.log(url, description, config)
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/posts`,
-        {
-          url: url,
-          description: description
-        },
-        config
-      )
+      await axios.post(`${process.env.REACT_APP_API_URL}/posts`, { url: url, description: description }, config)
 
       // Buscar os posts atualizados do servidor
-      const updatedPostsResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/posts`,
-        config
-      )
+      const updatedPostsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/posts`, config)
       const sortedPosts = updatedPostsResponse.data.sort((a, b) => b.id - a.id)
       const recentPosts = sortedPosts.slice(0, 20)
 
@@ -107,7 +106,6 @@ export default function Home() {
       setUrl('')
       setDescription('')
     } catch (error) {
-      console.error(error)
       alert('There was an error while publishing your link')
     } finally {
       setPublishing(false)
@@ -201,6 +199,42 @@ export default function Home() {
     [posts]
   )
 
+  //scroll infinito
+
+  async function goNextPage() {
+  
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}${nextPage}`);
+      const newPosts = res.data.results;
+      setNextPage(res.data.nextUrl)
+      setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+      setNextPage(res.data.nextUrl);
+    } catch (error) {
+      return alert("acabou os posts :D")
+    }
+  }
+
+  useEffect(() => {
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          goNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+  
+    const sentinel = document.querySelector(".sentinel");
+    if (sentinel) {
+      intersectionObserver.observe(sentinel);
+    }
+  
+    return () => {
+      intersectionObserver.disconnect();
+    };
+  }, [nextPage]);
+  
+  
   return (
     <>
       <Header />
@@ -248,7 +282,9 @@ export default function Home() {
         </PublicationBox>
 
         {loading ? (
-          <img src={loadingImage} alt="Loading..." />
+          <LoaderDiv>
+            <MoonLoader />
+          </LoaderDiv>
         ) : error ? (
           <p>
             An error occurred while trying to fetch the posts, please refresh
@@ -349,7 +385,7 @@ export default function Home() {
                         <p>{post.url}</p>
                       </TextMetaData >
                       <>
-                        <img src={react} alt="" />
+                        <img src={post.urlImg ? post.urlImg : react} alt="imagem" />
                       </>
                     </MetaData >
                   )}
@@ -359,6 +395,10 @@ export default function Home() {
           ))
         )}
       </Container>
+
+      <Sentinel>
+        <li className='sentinel'></li>
+      </Sentinel>
 
       <DeleteModal
         show={showDeleteModal}
@@ -382,4 +422,16 @@ const TextMetaData = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
+`
+const Sentinel = styled.ul`
+  height: 1px;
+  width: 1px;
+`
+const LoaderDiv = styled.div`
+  width: 100%;
+  height: 50vh;
+
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
 `
