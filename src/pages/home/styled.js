@@ -224,7 +224,7 @@ export const ContainerRepostBy = styled.div`
   }
 
   .username {
-    font-weight: bold; /* Adicione negrito ao nome do usuário */
+    font-weight: bold; 
   }
 `;
 
@@ -244,7 +244,6 @@ export const BoxInfosPost = styled.div`
   justify-content: space-around;
   align-items: left;
   height: 100%;
-  /* width: 10px; */
   padding: 10px;
   margin-top: -10px;
   font-weight: 400;
@@ -255,6 +254,7 @@ export const BoxInfosPost = styled.div`
     height: auto;
     min-height: 20vh;
     border-radius: 8px;
+    width: 36vw;
     border: 1px solid #b9b9b9;
     color: #cecece;
     cursor: pointer;
@@ -423,10 +423,11 @@ export const MetaData = styled.div`
 `;
 
 export const TextMetaData = styled.div`
-  width: 65%;
+  width: 70%;
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
+  word-break: break-all;
 `;
 export const NewPostsButton = styled.button`
   background-color: #1877f2;
