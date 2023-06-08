@@ -312,7 +312,7 @@ export default function Home() {
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/posts/repost/${selectedPostId}`,
+        `${process.env.REACT_APP_API_URL}/posts/${selectedPostId}/repost`,
         {},
         config
       );
