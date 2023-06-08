@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Tooltip } from "react-tooltip";
-import FONTS from '../../constants/Fonts'
-import { FiRefreshCcw } from 'react-icons/fi';
+import FONTS from "../../constants/Fonts";
+import { FiRefreshCcw } from "react-icons/fi";
 
 export const TimelineContainer = styled.div`
   display: flex;
@@ -73,9 +73,9 @@ export const PublicationBox = styled.div`
 export const BoxImage = styled.div`
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin-bottom: 10px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 
   @media screen and (min-width: 480px) {
     margin-bottom: 0;
@@ -87,6 +87,7 @@ export const UserImage = styled.img`
   height: 4.5vw;
   max-height: 100px;
   border-radius: 50%;
+  margin-bottom: -80px;
 
   @media screen and (max-width: 480px) {
     display: none;
@@ -191,9 +192,47 @@ export const PostBox = styled.div`
   height: 100%;
   border-radius: 15px;
   margin-bottom: 50px;
+  /* display: flex;
+  flex-direction: column; */
+  padding: 20px;
+  @media screen and (min-width: 480px) {
+    flex-direction: row;
+  }
+`;
+
+export const ContainerRepostBy = styled.div`
+  background-color: #1e1e1e;
+  width: 100%;
+  height: 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-shrink: 0;
+
+  p {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+  }
+
+  .repost-icon {
+    margin-right: 5px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .username {
+    font-weight: bold; 
+  }
+`;
+
+export const Encapsulation = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  width: 100%;
+
   @media screen and (min-width: 480px) {
     flex-direction: row;
   }
@@ -205,7 +244,6 @@ export const BoxInfosPost = styled.div`
   justify-content: space-around;
   align-items: left;
   height: 100%;
-  width: 100%;
   padding: 10px;
   margin-top: -10px;
   font-weight: 400;
@@ -216,6 +254,7 @@ export const BoxInfosPost = styled.div`
     height: auto;
     min-height: 20vh;
     border-radius: 8px;
+    width: 36vw;
     border: 1px solid #b9b9b9;
     color: #cecece;
     cursor: pointer;
@@ -307,11 +346,13 @@ export const ButtonLikeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 160px;
+  font-family: "Lato";
+  cursor: pointer;
+
   span {
     color: #fff;
     font-weight: 400;
-    font-size: 15px;
+    font-size: 13px;
     font-family: "Lato";
     font-style: normal;
   }
@@ -382,31 +423,49 @@ export const MetaData = styled.div`
 `;
 
 export const TextMetaData = styled.div`
-  width: 65%;
+  width: 70%;
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
+  word-break: break-all;
 `;
 export const NewPostsButton = styled.button`
-  background-color: #1877F2;
+  background-color: #1877f2;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.45);
   border-radius: 16px;
-  border: 1px solid #1877F2;
+  border: 1px solid #1877f2;
   height: 61px;
   font-family: ${FONTS.LINKS}, normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
   margin-bottom: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
-`
+`;
 
 export const Icon = styled(FiRefreshCcw)`
   font-size: 22px;
   font-weight: bold;
-`
+`;
+
+export const ButtonRepost = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  font-family: "Lato";
+  p {
+    color: #fff;
+    font-weight: 400;
+    font-size: 13px;
+    font-family: "Lato";
+    font-style: normal;
+  }
+`;
