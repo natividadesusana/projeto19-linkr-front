@@ -64,7 +64,62 @@ export default function User() {
         )
       })
   }, [])
-  //Comparar os ids, para comparar se é o usuário em questão setIsCurrentUser(id === user.id) ------
+  useEffect(() => {
+    if (Number(id) === Number(user.id)) {
+      setIsCurrentUser(true);
+    } else {
+      setIsCurrentUser(false);
+    }
+  }, [id, user.id]);
+
+  // Carregar status de seguidor
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setDisabled(true);
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${id}/followers/${user.id}`, config);
+        setDisabled(false);
+        setIsFollowing(response.data);
+        console.log(response.data)
+      } catch (error) {
+        setDisabled(false);
+        alert('Unable to perform followers operation');
+      }
+    }
+    fetchData()
+
+  }, [id, user.id]);
+
+
+  const toggleFollow = (event) => {
+    const body = { userId: user.id, id }
+    setDisabled(true)
+    if (event === "Follow") {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/users/followers`, body, config)
+        .then(() => {
+          setDisabled(false)
+          setIsFollowing(!isFollowing)
+        })
+        .catch((err) => {
+          setDisabled(false)
+          alert(`Error: ${err.response.data}`)
+        })
+    }
+    if (event === "Unfollow") {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/users/${id}/followers/${user.id}`, config)
+        .then(() => {
+          setDisabled(false)
+          setIsFollowing(!isFollowing)
+        })
+        .catch((err) => {
+          setDisabled(false)
+          alert(`Error: ${err.response.data}`)
+        })
+    }
+  }
   return (
     <>
       <Header />
@@ -75,10 +130,12 @@ export default function User() {
           ) : (
             <Title>LULA</Title>
           )}
-          {!isCurrentUser && (
-            <FollowButton isFollowing={isFollowing} disabled={disabled}>
-              {isFollowing ? "Follow" : "Unfollow"}
+          {!isCurrentUser ? (
+            <FollowButton onClick={() => toggleFollow(!isFollowing ? "Follow" : "Unfollow")} isFollowing={isFollowing} disabled={disabled}>
+              {!isFollowing ? "Follow" : "Unfollow"}
             </FollowButton>
+          ) : (
+            ""
           )}
         </Menu>
         {loading ? (
