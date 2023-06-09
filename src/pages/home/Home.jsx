@@ -78,13 +78,13 @@ export default function Home() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/posts`, config)
       .then((res) => {
-        if (Array.isArray(res.data.results)) { 
+        if (Array.isArray(res.data.results)) {
           const sortedPosts = res.data.results.sort((a, b) => b.id - a.id);
           const recentPosts = sortedPosts.slice(0, 20);
           setPosts(recentPosts);
           setEmptyPosts(recentPosts.length === 0);
           setLoading(false);
-  
+
           getRepostCount();
         } else {
           console.error("Invalid response data:", res.data);
@@ -105,7 +105,6 @@ export default function Home() {
       });
     // eslint-disable-next-line
   }, []);
-  
 
   // Busca Re-posts
   const getRepostCount = useCallback(async () => {
@@ -156,7 +155,10 @@ export default function Home() {
         `${process.env.REACT_APP_API_URL}/posts`,
         config
       );
-      const sortedPosts = updatedPostsResponse.data.sort((a, b) => b.id - a.id);
+      console.log(updatedPostsResponse);
+      const sortedPosts = updatedPostsResponse.data.results.sort(
+        (a, b) => b.id - a.id
+      );
       const recentPosts = sortedPosts.slice(0, 20);
 
       setPosts(recentPosts);
@@ -175,10 +177,8 @@ export default function Home() {
         ];
         setTrendings(Array.from(new Set(newTrendings)));
       }
-      setPosts(recentPosts);
-      setEmptyPosts(recentPosts.length === 0);
-      setUrl("");
-      setDescription("");
+
+    
     } catch (error) {
       console.error(error);
       alert("There was an error while publishing your link");
@@ -302,6 +302,20 @@ export default function Home() {
       );
       const countPosts = Number(response.data.countPosts);
       setNewPostsCount(countPosts);
+
+      if (countPosts > 0) {
+        // Buscar os novos posts apenas se houver novos posts
+        const updatedPostsResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/posts`,
+          config
+        );
+        const sortedPosts = updatedPostsResponse.data.results.sort(
+          (a, b) => b.id - a.id
+        );
+        const recentPosts = sortedPosts.slice(0, 20);
+        setPosts(recentPosts);
+        setEmptyPosts(recentPosts.length === 0);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -385,7 +399,7 @@ export default function Home() {
             </BoxInfos>
           </PublicationBox>
           {newPostsCount > 0 && (
-            <NewPostsButton onClick={handleNewPosts}>
+            <NewPostsButton onClick={handleNewPosts} data-test="load-btn">
               {newPostsCount} new posts, load more!
               <Icon />
             </NewPostsButton>
