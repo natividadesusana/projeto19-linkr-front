@@ -78,13 +78,22 @@ export default function Home() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/posts`, config)
       .then((res) => {
-        const sortedPosts = res.data.sort((a, b) => b.id - a.id);
-        const recentPosts = sortedPosts.slice(0, 20);
-        setPosts(recentPosts);
-        setEmptyPosts(recentPosts.length === 0);
-        setLoading(false);
-
-        getRepostCount();
+        if (Array.isArray(res.data.results)) { 
+          const sortedPosts = res.data.results.sort((a, b) => b.id - a.id);
+          const recentPosts = sortedPosts.slice(0, 20);
+          setPosts(recentPosts);
+          setEmptyPosts(recentPosts.length === 0);
+          setLoading(false);
+  
+          getRepostCount();
+        } else {
+          console.error("Invalid response data:", res.data);
+          setError(true);
+          setLoading(false);
+          alert(
+            "An error occurred while trying to fetch the posts, please refresh the page"
+          );
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -96,6 +105,7 @@ export default function Home() {
       });
     // eslint-disable-next-line
   }, []);
+  
 
   // Busca Re-posts
   const getRepostCount = useCallback(async () => {
@@ -129,7 +139,6 @@ export default function Home() {
     setPublishing(true);
 
     try {
-      console.log(url, description, config);
       await axios.post(
         `${process.env.REACT_APP_API_URL}/posts`,
         {
@@ -282,7 +291,6 @@ export default function Home() {
   }, []);
 
   const fetchNewPostsCount = async () => {
-    console.log(lastUpdateTime);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/posts/new-posts`,
@@ -293,7 +301,6 @@ export default function Home() {
         }
       );
       const countPosts = Number(response.data.countPosts);
-      console.log(countPosts);
       setNewPostsCount(countPosts);
     } catch (error) {
       console.error(error);
